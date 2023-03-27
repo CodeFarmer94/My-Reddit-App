@@ -1,0 +1,98 @@
+*{
+    text-decoration: none;
+    
+}
+
+.post-container{
+    display:flex;
+    flex-direction: column;
+    color:rgb(0, 0, 0);
+    background-color : white;
+    margin: 0% 2% 0% 2%;
+    padding:3%;
+ 
+    border: 1px solid rgb(158, 156, 156);
+    text-align: left;
+}
+.post-container img {
+    max-width: 100%;
+    max-height: 512px;
+}
+@media only screen and (max-width: 600px) {
+  main {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr ;
+  grid-template-rows: auto;
+  margin: 2.5% 0;
+  width:95%
+}
+  .info-section {   
+  color: black;
+  width: 100%;
+  grid-column: 3 / 4; 
+  grid-row-start: 1;/* set the end column value to 4 to span 1 column */
+    }
+  .post-section {
+  width: 100%;
+  grid-row-start: 1;
+  grid-column: 2 / 3; /* set the end column value to 3 to span 2 columns */
+  }
+}
+@media only screen and (min-width: 600px) {
+  main {
+  display: grid;
+  grid-template-columns: 3fr  1fr ;
+  grid-template-rows: auto;
+  margin: 2.5% 0;
+  
+}
+  .info-section {   
+  
+  margin-top: 115px;
+  color: black;
+  width: 95%;
+  grid-column: 2 / 2; 
+  grid-row-start: 1;/* set the end column value to 4 to span 1 column */
+    }
+  .post-section {
+  width: 100%;
+  grid-row-start: 1;
+  grid-column: 1 / 2; /* set the end column value to 3 to span 2 columns */
+  }
+}
+
+
+.info-box {
+    border: 1px solid rgb(158, 156, 156);
+    background-color: white;
+    padding: 0;
+    width: 100%;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+.info-span{
+   
+    color:white;
+    padding: 1rem 0; 
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    width: 100%;
+}
+
+.post-section ul{
+    list-style: none; 
+}
+
+.options-btn {
+  border-radius: 12px;
+ 
+  margin-left: 3rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.2rem;
+ 
+  display: flex;
+  align-items: center;
+  padding:0.3rem 0.5rem
+}

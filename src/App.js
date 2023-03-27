@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.css';
-import SearchResults from './components/searchResults/SearchResults';
-import Reddit from './util/Reddit';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Reddit from './components/reddit/Reddit';
 
 function App() {
   return (
     <div className="App">
-      <SearchResults/>
-      <Reddit/>
+     <Router>
+      <Reddit />
+      </Router>
+     
     </div>
   );
 }
