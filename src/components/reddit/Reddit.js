@@ -20,24 +20,23 @@ const REDDIT_REDIRECT_URI = "http://localhost:3000/";
 function Reddit() {
 
 const dispatch = useDispatch();
-
 const userData = useSelector(selectUserData);
-
+const favoriteSubs = useSelector(selectUserFavSubs)
   //State Setting
  
  
   const [selectedSub, setSelectedSub] = useState("Italy")
   const [searchTerm, setSearchTerm] = useState("")
   const [postSearchResults, setPostSearchResults] = useState([])
-  const redditAccessToken = localStorage.getItem("reddit_access_token");
+  
 
   function authorize() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(REDDIT_REDIRECT_URI)}&duration=temporary&scope=read,identity,history,mysubreddits`;
+    const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(REDDIT_REDIRECT_URI)}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
     // Redirect the user to the authorization URL
     console.log(localStorage.getItem("reddit_access_token"))
-    if(!code )
+    if(!code || !localStorage.getItem("reddit_access_token") )
     { window.location.href = authUrl}
   }
 
@@ -56,6 +55,7 @@ const userData = useSelector(selectUserData);
     };
     const response = await fetch(tokenUrl, options);
     const data = await response.json();
+    console.log(data.access_token)
     localStorage.setItem("reddit_access_token", data.access_token);
     window.history.replaceState({}, "", window.location.pathname);
   }
@@ -66,14 +66,18 @@ useEffect(() => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code");
-  if (!code && !redditAccessToken) {
+  if (!code && !localStorage.getItem("reddit_access_token")) {
     authorize();
     return;
   }
-  if (!localStorage.getItem("reddit_access_token")) {
+  if(code){
     getToken();
   }
-}, [redditAccessToken, dispatch]);
+  return () => {
+    localStorage.removeItem("reddit_access_token");
+  };
+  
+}, []);
 
 useEffect(() => {
   async function getUserData() {
@@ -81,12 +85,12 @@ useEffect(() => {
       method: "GET",
       headers: {
         "User-Agent": "Reddit_App",
-        Authorization: `bearer ${redditAccessToken}`,
+        Authorization: `bearer ${localStorage.getItem("reddit_access_token")}`,
       },
     };
     const response = await fetch("https://oauth.reddit.com/api/v1/me.json", options);
     const data = await response.json();
-    console.log(data)
+    console.log(localStorage.getItem("reddit_access_token"))
     dispatch(setUserData(data));
   }
 
@@ -94,16 +98,17 @@ useEffect(() => {
   if (localStorage.getItem("reddit_access_token")) {
     getUserData();
   }
-}, [redditAccessToken, dispatch]);
+}, []);
 
 
 useEffect(() => {
+  console.log("get fav sub effect run")
   async function getUserFavSubs() {
     const options = {
       method: "GET",
       headers: {
         "User-Agent": "Reddit_App",
-        Authorization: `bearer ${redditAccessToken}`,
+        Authorization: `bearer ${localStorage.getItem("reddit_access_token")}`,
       },
     };
     const response = await fetch( "https://oauth.reddit.com/subreddits/mine/subscriber", options);
@@ -111,10 +116,10 @@ useEffect(() => {
     dispatch(setUserFavSubs(data.data.children));
     console.log(data.data.children)
   }
-  if (redditAccessToken) {
+  if (localStorage.getItem("reddit_access_token")) {
     getUserFavSubs();
   }
-}, [redditAccessToken, dispatch]);
+}, [ dispatch]);
 
 
     
@@ -141,8 +146,7 @@ useEffect(() => {
   
    
    
-   
-   
+
   return (
 
     <div>

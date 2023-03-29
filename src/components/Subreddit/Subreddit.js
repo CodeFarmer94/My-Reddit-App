@@ -23,7 +23,10 @@ const [selectedSubOption, setSelectedSubOption] = useState("hot");
         `https://www.reddit.com/r/${subreddit}/${selectedSubOption}.json`
       );
       const data = await response.json();
-      setSelectedSubPosts(data.data.children);
+      if(data.data.children){
+        setSelectedSubPosts(data.data.children);
+      }
+      
     }
     async function getSubredditData() {
       const response = await fetch(
@@ -92,7 +95,8 @@ const headerTitle = selectedSubData.data.title;
 
       <main>
         <InfoSection selectedSubData={selectedSubData} 
-        selectedSub={selectedSub} setSelectedSub={setSelectedSub}/>
+        selectedSub={selectedSub} setSelectedSub={setSelectedSub}
+        />
         
         <div className="post-section">
         <div

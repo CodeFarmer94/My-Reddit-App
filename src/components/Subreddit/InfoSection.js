@@ -2,16 +2,74 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import "./Subreddit.css";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { selectUserFavSubs } from "../../app/store";
+
 import { useSelector } from "react-redux";
 import { getContrastColor } from "../../features/getContrastColor";
+import { addSubToFav,selectUserFavSubs,removeSubFromFav } from "../../app/store";
+import { useDispatch } from "react-redux";
+import { useEffect,useState } from "react";
 
 export default function InfoSection({
     selectedSubData,
     selectedSub,
     setSelectedSub,
 }) {
+
     const favoriteSubs = useSelector(selectUserFavSubs);
+    
+    const  [isSubFavorite,setIsSubFavorite] = useState(false)
+
+
+    useEffect(() => {
+        if(selectedSubData && favoriteSubs.length !== 0){
+              setIsSubFavorite(
+          favoriteSubs.some(
+            (subreddit) =>
+              subreddit.data.display_name === selectedSubData.data.display_name
+          )
+        );  
+            }
+      }, [selectedSubData.data.display_name, favoriteSubs]);
+      
+
+
+
+    async function addFavSub(subreddit) {
+        const response = await fetch(`https://oauth.reddit.com/api/subscribe?action=sub&sr_name=${subreddit}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("reddit_access_token")}`,
+            "Content-Type": "application/json",
+          }
+        });
+        const data = await response.json();
+        console.log(subreddit)
+        dispatch(addSubToFav(selectedSubData))
+      }
+      async function removeFavSub(subreddit) {
+        const response = await fetch(`https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("reddit_access_token")}`,
+            "Content-Type": "application/json",
+          }
+        });
+        const data = await response.json();
+        console.log(subreddit)
+        dispatch(removeSubFromFav(selectedSubData))
+      }
+
+    const dispatch = useDispatch()
+    const handleClick = (subreddit) =>{
+        if(isSubFavorite){
+        removeFavSub(subreddit)
+        }
+        else{
+        addFavSub(subreddit)
+        }
+        } 
+
+    
 
     const primaryColor = selectedSubData.data.primary_color
         ? selectedSubData.data.primary_color
@@ -35,7 +93,7 @@ export default function InfoSection({
                         Informazioni
                     </h4>
                 </div>
-                <p style={{ padding: "1rem",textAlign:"left" }}>
+                <p style={{ padding: "1rem",textAlign:"justified" }}>
                     <ReactMarkdown>{descriptionText}</ReactMarkdown>
                 </p>
                 <p
@@ -48,8 +106,8 @@ export default function InfoSection({
                         borderBottom: "0.8px solid gray",
                     }}
                 >
-                    <button className="options-btn" style={{color:favoriteSubs.some(
-                        (subreddit) => subreddit.data.display_name === selectedSub) ? "red":"black",
+                    <button onClick={()=>handleClick(selectedSubData.data.display_name)} className="options-btn" 
+                    style={{color: isSubFavorite ? "red":"black",
                         margin:"auto"}}>
                         <FaHeart />
                         Favorite
@@ -110,11 +168,10 @@ export default function InfoSection({
                                       <div
                                           style={{
                                               backgroundColor:
-                                                  subreddit.data.primary_color,
+                                                  subreddit.data.primary_color ? subreddit.data.primary_color : "#8681e3",
                                               display: "inline-block",
-                                              color: getContrastColor(
-                                                  subreddit.data.primary_color
-                                              ),
+                                              color:   subreddit.data.primary_color ? getContrastColor(
+                                                  subreddit.data.primary_color) : "white",
                                               borderRadius: "5px",
                                               padding: "0.3rem",
                                               margin: "0.5rem",
