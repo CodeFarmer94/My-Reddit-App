@@ -16,10 +16,10 @@ const redditSlice = createSlice({
     setUserFavSubs: (state, action)=>{
       state.userFavSubs = action.payload
     },
-    addSubToFav:(state, action)=>{
+    addFavSubToStore:(state, action)=>{
       state.userFavSubs.push(action.payload);
     },
-    removeSubFromFav:(state,action)=>{
+    removeFavSubFromStore:(state,action)=>{
     
       state.userFavSubs= state.userFavSubs.filter(item=>{
         
@@ -31,8 +31,8 @@ export const { setUserFavSubs } = redditSlice.actions;
 export const  selectUserFavSubs = (state)=> state.reddit.userFavSubs
 export const { setUserData } = redditSlice.actions;
 export const selectUserData = (state) => state.reddit.userData;
-export const {addSubToFav} = redditSlice.actions;
-export const {removeSubFromFav} = redditSlice.actions
+export const {addFavSubToStore} = redditSlice.actions;
+export const {removeFavSubFromStore} = redditSlice.actions
 const store = configureStore({
   reducer: {
     reddit: redditSlice.reducer,

@@ -6,11 +6,8 @@ import RedditLogo from "../../images/RedditLogo2.png";
 
 import "./Subreddit.css";
 
-export default function ListOfSubsPosts({
-    selectedSubPosts,
-    selectedSubData,
-    selectedSub,
-}) {
+export default function ListOfSubsPosts({selectedSubPosts}) {
+    
     function isImageUrl(url) {
         return /\.(jpeg|jpg|gif|png)$/i.test(url);
     }
@@ -67,7 +64,7 @@ export default function ListOfSubsPosts({
                             >
                                 Posted by: u/{post.data.author}
                             </p>
-                            <h2
+                            <h3
                                 style={{
                                     margin: "0.4rem 0",
                                     color: "black",
@@ -90,7 +87,7 @@ export default function ListOfSubsPosts({
                                     ""
                                 )}
                                 <ReactMarkdown>{post.data.title}</ReactMarkdown>
-                            </h2>
+                            </h3>
 
                             {post.data.url_overridden_by_dest &&
                                 (isImageUrl(

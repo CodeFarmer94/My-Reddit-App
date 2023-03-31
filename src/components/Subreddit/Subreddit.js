@@ -49,9 +49,7 @@ const [selectedSubOption, setSelectedSubOption] = useState("hot");
     setSelectedSub(subTextInput);
   };
 
-  function isImageUrl(url) {
-    return /\.(jpeg|jpg|gif|png)$/i.test(url);
-  }
+ 
 
   // extract variables from subredditData
   const headerBannerURL = selectedSubData.data.banner_img;

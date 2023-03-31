@@ -2,24 +2,24 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import "./Subreddit.css";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
 import { useSelector } from "react-redux";
 import { getContrastColor } from "../../features/getContrastColor";
-import { addSubToFav,selectUserFavSubs,removeSubFromFav } from "../../app/store";
+import { getRandomColor } from "../../features/getRandomColor";
+import { addFavSubToStore,selectUserFavSubs,removeFavSubFromStore } from "../../app/store";
 import { useDispatch } from "react-redux";
 import { useEffect,useState } from "react";
 
 export default function InfoSection({
     selectedSubData,
-    selectedSub,
     setSelectedSub,
 }) {
 
-    const favoriteSubs = useSelector(selectUserFavSubs);
-    
+    // State setting and hooks calls
     const  [isSubFavorite,setIsSubFavorite] = useState(false)
+    const favoriteSubs = useSelector(selectUserFavSubs);
+    const dispatch = useDispatch()
 
-
+    // Setting isFavorite State if Subreddit is present in favoriteSubs
     useEffect(() => {
         if(selectedSubData && favoriteSubs.length !== 0){
               setIsSubFavorite(
@@ -30,11 +30,10 @@ export default function InfoSection({
         );  
             }
       }, [selectedSubData.data.display_name, favoriteSubs]);
+     
       
-
-
-
-    async function addFavSub(subreddit) {
+     // Async Function  to add sub to user reddit account
+    async function addSubToReddit(subreddit) {
         const response = await fetch(`https://oauth.reddit.com/api/subscribe?action=sub&sr_name=${subreddit}`, {
           method: "POST",
           headers: {
@@ -44,9 +43,11 @@ export default function InfoSection({
         });
         const data = await response.json();
         console.log(subreddit)
-        dispatch(addSubToFav(selectedSubData))
+        dispatch(addFavSubToStore(selectedSubData))
       }
-      async function removeFavSub(subreddit) {
+
+      // Async Function t to remove sub from user reddit account
+      async function removeSubFromReddit(subreddit) {
         const response = await fetch(`https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`, {
           method: "POST",
           headers: {
@@ -56,32 +57,33 @@ export default function InfoSection({
         });
         const data = await response.json();
         console.log(subreddit)
-        dispatch(removeSubFromFav(selectedSubData))
+        dispatch(removeFavSubFromStore(selectedSubData))
       }
 
-    const dispatch = useDispatch()
-    const handleClick = (subreddit) =>{
-        if(isSubFavorite){
-        removeFavSub(subreddit)
-        }
-        else{
-        addFavSub(subreddit)
-        }
-        } 
+      // Add/Remove sub on button click
+        const handleClick = (subreddit) =>{
+            if(isSubFavorite){
+            removeSubFromReddit(subreddit)
+            }
+            else{
+            addSubToReddit(subreddit)
+            }
+            } 
+
+
+      // Extracting data from selectedSubData fetch call
+        const primaryColor = selectedSubData.data.primary_color
+            ? selectedSubData.data.primary_color
+            : "#063970";
+        const contrastColor = getContrastColor(primaryColor);
+        const timestamp = selectedSubData.data.created_utc;
+        let date = new Date(timestamp * 1000);
+        const descriptionText = selectedSubData.data.public_description;
+        let creationDate = date.toLocaleDateString(); // Output: "01/13/2014"
+        const subscribers = selectedSubData.data.subscribers;
+        const active_users = selectedSubData.data.active_user_count;
 
     
-
-    const primaryColor = selectedSubData.data.primary_color
-        ? selectedSubData.data.primary_color
-        : "#063970";
-    const contrastColor = getContrastColor(primaryColor);
-    const timestamp = selectedSubData.data.created_utc;
-    let date = new Date(timestamp * 1000);
-    const descriptionText = selectedSubData.data.public_description;
-    let creationDate = date.toLocaleDateString(); // Output: "01/13/2014"
-    const subscribers = selectedSubData.data.subscribers;
-    const active_users = selectedSubData.data.active_user_count;
-
     return (
         <div className="info-section">
             <div className="info-box">
@@ -159,19 +161,24 @@ export default function InfoSection({
                         </h4>
                     </div>
                     <p style={{ padding: "1rem", textAlign: "left" }}>
+                        
                         {favoriteSubs.length !== 0
-                            ? favoriteSubs.map((subreddit, index) => (
-                                  <Link
+                            ? favoriteSubs.map((subreddit, index) => {
+                                  
+                                const randomColor = getRandomColor()  
+
+
+                                  return( <Link
                                       key={index}
                                       to={`/r/${subreddit.data.display_name}`}
                                   >
                                       <div
                                           style={{
                                               backgroundColor:
-                                                  subreddit.data.primary_color ? subreddit.data.primary_color : "#8681e3",
+                                                  subreddit.data.primary_color ? subreddit.data.primary_color : randomColor,
                                               display: "inline-block",
                                               color:   subreddit.data.primary_color ? getContrastColor(
-                                                  subreddit.data.primary_color) : "white",
+                                                  subreddit.data.primary_color) : getContrastColor(randomColor),
                                               borderRadius: "5px",
                                               padding: "0.3rem",
                                               margin: "0.5rem",
@@ -185,8 +192,9 @@ export default function InfoSection({
                                       >
                                           {subreddit.data.display_name}
                                       </div>
-                                  </Link>
-                              ))
+                                  </Link>)
+                            }
+                              )
                             : ""}
                     </p>
                 </div>

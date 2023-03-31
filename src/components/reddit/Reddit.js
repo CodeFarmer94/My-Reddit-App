@@ -21,13 +21,11 @@ function Reddit() {
 
 const dispatch = useDispatch();
 const userData = useSelector(selectUserData);
-const favoriteSubs = useSelector(selectUserFavSubs)
+
   //State Setting
- 
- 
   const [selectedSub, setSelectedSub] = useState("Italy")
   const [searchTerm, setSearchTerm] = useState("")
-  const [postSearchResults, setPostSearchResults] = useState([])
+
   
 
   function authorize() {
@@ -122,37 +120,16 @@ useEffect(() => {
 }, [ dispatch]);
 
 
-    
-// Get list of post per search
-    useEffect(()=> {async function getPostsBySearchTerm(searchTerm) {
-    try {
-
-        const response = await fetch(
-          `https://www.reddit.com/search.json?q=${searchTerm}&sort=popular`
-        );
-        const data = await response.json();
-        setPostSearchResults( data.data.children.map((post) => post.data))
-    } catch (error) {
-        console.error(error);
-        return [];
-      }
-    }
-      getPostsBySearchTerm(searchTerm)
-    },[searchTerm])
 
 
+// Get list of subreddit per search
 
-
-  
-   
-   
 
   return (
 
     <div>
       <SearchPostsBar
           setSearchTerm= {setSearchTerm} 
-          setPostSearchResults={setPostSearchResults}
           userData={userData}
           />
           
@@ -161,10 +138,10 @@ useEffect(() => {
         <Subreddit selectedSub={selectedSub} setSelectedSub={setSelectedSub} />
       </Route>
 
-      <Route path="/searchResults">
-      <SearchResults searchTerm={searchTerm} postSearchResults={postSearchResults}/>
+      <Route path="/searchResults/">
+      <SearchResults searchTerm={searchTerm} />
       </Route>
-
+      
       <Route path="/popularSubs">
         <PopularSubs  setSelectedSub={setSelectedSub}/>
       </Route>
