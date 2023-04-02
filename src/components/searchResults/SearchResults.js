@@ -64,12 +64,12 @@ export default function SearchResults() {
         
       />
       <Switch>
-        <Route to={`/searchResults/posts/:searchTerm`} exact>
+        <Route path={`/searchResults/posts/:searchTerm`} exact>
         {selectedSearchOption === "posts" && (
         <SearchResults_Post postSearchResults={postSearchResults}  />
       )}
       </Route>
-      <Route to="/searchResults/subreddits/:searchTerm" exact>
+      <Route path="/searchResults/subreddits/:searchTerm" exact>
       {selectedSearchOption === "subreddits" && (
         <SearchResults_Subreddits
           subredditSearchResults={subredditSearchResults} 

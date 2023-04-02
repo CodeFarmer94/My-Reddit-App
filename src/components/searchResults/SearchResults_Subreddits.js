@@ -4,9 +4,6 @@ import { useEffect,useState } from "react";
 export default function SearchResults_Subreddits({searchTerm,subredditSearchResults }) {
 
 
-
-
-
   return (
     <div>
       <h2>Results for "{searchTerm}"</h2>
