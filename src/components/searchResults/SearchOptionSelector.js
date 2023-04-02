@@ -12,7 +12,8 @@ export default function SearchOptionSelector({ selectedSearchOption, setSelected
   };
 
   return (
-    <div style={{ backgroundColor: "white", display: "flex", justifyContent: "left", width: "96%", margin: "1rem auto", padding: "0.5rem 0", border: "1px solid gray", borderRadius: "5px" }}>
+    <div style={{ backgroundColor: "#8a9dbd", display: "flex", justifyContent: "left", 
+      padding: "0.8rem 0", border: "1px solid gray",borderTopLeftRadius:"5px" ,borderTopRightRadius:"5px"}}>
       
       <Link to={`/searchResults/posts/${search}`}>
       <button className="options-btn"

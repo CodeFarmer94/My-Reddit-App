@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+
 import { Link } from "react-router-dom";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { BiCommentDetail } from "react-icons/bi";
