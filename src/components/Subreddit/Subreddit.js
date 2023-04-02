@@ -1,46 +1,49 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { BiCommentDetail } from "react-icons/bi";
 import RedditLogo from "../../images/RedditLogo.png";
 import ListOfSubsPosts from "./ListOfSubPosts";
 import SubOptionSelector from "./SubOptionSelector";
 import InfoSection from "./InfoSection";
 import "./Subreddit.css";
 
-export default function Subreddit({ selectedSub, setSelectedSub }) {
+
+export default function Subreddit({ setSelectedSub }) {
 
 const [subTextInput, setSubTextInput] = useState();
 const [selectedSubPosts, setSelectedSubPosts] = useState([]);
 const [selectedSubData, setSelectedSubData] = useState({ data: {} });
 const [selectedSubOption, setSelectedSubOption] = useState("hot");
-  const path = window.location.pathname; 
-  const subreddit = path.slice(3); 
+ 
+// retreive subredditName from url bar
+ const pathname = window.location.pathname;
+ const parts = pathname.split('/');
+ const subredditName = parts[2];
+
 
   useEffect(() => {
     async function getPopularPostsPerSub() {
       const response = await fetch(
-        `https://www.reddit.com/r/${subreddit}/${selectedSubOption}.json`
+        `https://www.reddit.com/r/${subredditName}/${selectedSubOption}.json`
       );
       const data = await response.json();
       if(data.data.children){
         setSelectedSubPosts(data.data.children);
       }
-      
+
     }
     async function getSubredditData() {
       const response = await fetch(
-        `https://www.reddit.com/r/${subreddit}/about.json?flair_enabled=true`
+        `https://www.reddit.com/r/${subredditName}/about.json?flair_enabled=true`
       );
       const data = await response.json();
       setSelectedSubData(data);
-      setSelectedSub(subreddit);
+      
     }
 
     getPopularPostsPerSub();
     getSubredditData();
   
-  }, [selectedSub,selectedSubOption]);
+  }, [subredditName,selectedSubOption]);
 
   const handleChange = (e) => {
     setSubTextInput(e.target.value);
@@ -77,13 +80,7 @@ const headerTitle = selectedSubData.data.title;
               }}
               src={headerBannerURL ? headerBannerURL : headerImgURL}
             />
-            <input type="text" onChange={handleChange}></input>
-            <Link to={`/r/${subTextInput}`}>
-              <button onClick={onClick}>setSubreddit</button>
-            </Link>
-            <button>
-              <Link to="/popularSubs">Link to PopularSubs</Link>
-            </button>
+           
           </>
         ) : (
           <div>Loading...</div>
@@ -92,9 +89,7 @@ const headerTitle = selectedSubData.data.title;
       </header>
 
       <main>
-        <InfoSection selectedSubData={selectedSubData} 
-        selectedSub={selectedSub} setSelectedSub={setSelectedSub}
-        />
+        <InfoSection selectedSubData={selectedSubData} setSelectedSub={setSelectedSub}/>
         
         <div className="post-section">
         <div
@@ -107,7 +102,7 @@ const headerTitle = selectedSubData.data.title;
             <img
               src={iconImg}
               alt="sub-icon-img"
-              style={{ width: "100px", margin: "0 2rem" }}
+              style={{ width: "100px", margin: "0 2rem" ,borderRadius:"50%",border:"4px solid white"}}
             />
             <div
               style={{
@@ -118,11 +113,11 @@ const headerTitle = selectedSubData.data.title;
               }}
             >
               <h1>{headerTitle}</h1>
-              <p>{`r/${selectedSub}`}</p>
+              <p>{`r/${subredditName}`}</p>
             </div>
           </div>
         <SubOptionSelector selectedSubOption={selectedSubOption} setSelectedSubOption= {setSelectedSubOption}/>
-        <ListOfSubsPosts selectedSubPosts={selectedSubPosts} selectedSubData={selectedSubData} selectedSub={selectedSub}/></div>
+        <ListOfSubsPosts selectedSubPosts={selectedSubPosts} selectedSubData={selectedSubData} /></div>
       </main>
     </div>
   );

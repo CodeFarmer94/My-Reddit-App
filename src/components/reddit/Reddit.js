@@ -6,7 +6,7 @@ import Post from "../post/Post";
 import { Switch, Route } from "react-router-dom";
 import SearchResults from "../searchResults/SearchResults";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUserFavSubs,setUserData, selectUserData, setUserFavSubs } from "../../app/store.js"
+import { setUserData, selectUserData, setUserFavSubs } from "../../app/store.js"
 
 
 
@@ -112,7 +112,7 @@ useEffect(() => {
     const response = await fetch( "https://oauth.reddit.com/subreddits/mine/subscriber", options);
     const data = await response.json();
     dispatch(setUserFavSubs(data.data.children));
-    console.log(data.data.children)
+    
   }
   if (localStorage.getItem("reddit_access_token")) {
     getUserFavSubs();
@@ -134,11 +134,11 @@ useEffect(() => {
           />
           
       <Switch>
-      <Route path="/r/:selectedSub" >
+      <Route path="/r/:subredditName" >
         <Subreddit selectedSub={selectedSub} setSelectedSub={setSelectedSub} />
       </Route>
 
-      <Route path="/searchResults/">
+      <Route path="/searchResults">
       <SearchResults searchTerm={searchTerm} />
       </Route>
       

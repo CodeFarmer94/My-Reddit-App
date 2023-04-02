@@ -19,7 +19,7 @@ return (
      <Link to= '/'><img alt="website logo"src={TrenkTalkLogo}/></Link> 
       <section className="search">
       <input type= "text" onChange={handleChange} placeholder="Search Reddit..."/>
-       <Link to="/searchResults"><button onClick = {onClick}>Search Posts</button></Link>
+       <Link to={`/searchResults/posts/${searchInputText}`}><button onClick = {onClick}>Search Posts</button></Link>
       </section>
    
       <section className="profile">
