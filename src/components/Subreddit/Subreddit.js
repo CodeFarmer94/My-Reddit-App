@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import RedditLogo from "../../images/RedditLogo.png";
-import ListOfSubsPosts from "./ListOfSubPosts";
-import SubOptionSelector from "./SubOptionSelector";
-import InfoSection from "./InfoSection";
+import ListOfSubsPosts from "./listOfSubPosts/ListOfSubPosts";
+import OptionSelector from "../optionSelector/OptionSelector";
+import InfoBox from "./infoBox/InfoBox";
+import SubListBox from "../subListBox/SubListBox";
+import { selectUserFavSubs } from "../../app/store";
+import { useSelector } from "react-redux";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import "./Subreddit.css";
 
 
 export default function Subreddit({ setSelectedSub }) {
 
-const [subTextInput, setSubTextInput] = useState();
 const [selectedSubPosts, setSelectedSubPosts] = useState([]);
 const [selectedSubData, setSelectedSubData] = useState({ data: {} });
 const [selectedSubOption, setSelectedSubOption] = useState("hot");
- 
+const favoriteSubs = useSelector(selectUserFavSubs);
+
 // retreive subredditName from url bar
  const pathname = window.location.pathname;
  const parts = pathname.split('/');
  const subredditName = parts[2];
+
+ useEffect(() => {
+  window.scrollTo(0, 0);
+}, [subredditName]);
 
 
   useEffect(() => {
@@ -29,15 +36,14 @@ const [selectedSubOption, setSelectedSubOption] = useState("hot");
       if(data.data.children){
         setSelectedSubPosts(data.data.children);
       }
-
     }
     async function getSubredditData() {
       const response = await fetch(
         `https://www.reddit.com/r/${subredditName}/about.json?flair_enabled=true`
       );
       const data = await response.json();
+      console.log(data)
       setSelectedSubData(data);
-      
     }
 
     getPopularPostsPerSub();
@@ -45,12 +51,7 @@ const [selectedSubOption, setSelectedSubOption] = useState("hot");
   
   }, [subredditName,selectedSubOption]);
 
-  const handleChange = (e) => {
-    setSubTextInput(e.target.value);
-  };
-  const onClick = () => {
-    setSelectedSub(subTextInput);
-  };
+
 
  
 
@@ -67,56 +68,47 @@ const headerTitle = selectedSubData.data.title;
   
   return (
     <div>
-      <header style={{ backgroundColor: primaryColor, minHeight: "10vh" }}>
-        {selectedSubData ? (
-          <>
+      <header >
+        <div style={{ backgroundColor: primaryColor, minHeight: "10vh" }}>
+        
+          
             <img
               className="banner-bg"
-              style={{
-                maxWidth: "100%",
-                maxHeight: "25vh",
-                display: "block",
-                margin: "auto",
-              }}
               src={headerBannerURL ? headerBannerURL : headerImgURL}
             />
            
-          </>
-        ) : (
-          <div>Loading...</div>
-        )}
+          
       
-      </header>
-
-      <main>
-        <InfoSection selectedSubData={selectedSubData} setSelectedSub={setSelectedSub}/>
-        
-        <div className="post-section">
+        </div>
         <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+            className="title-div"
+            style={{margin: "1rem 0 1rem 0"}}
           >
             <img
               src={iconImg}
               alt="sub-icon-img"
-              style={{ width: "100px", margin: "0 2rem" ,borderRadius:"50%",border:"4px solid white"}}
+              id="sub-icon-img"
             />
             <div
-              style={{
-                display: "flex",
-                justifyContent: "left",
-                flexDirection: "column",
-                textAlign: "left",
-              }}
+              className="title-div-col"
             >
               <h1>{headerTitle}</h1>
               <p>{`r/${subredditName}`}</p>
+              <p className="sub-description-mobile"><ReactMarkdown>{selectedSubData.data.public_description}</ReactMarkdown></p>
             </div>
           </div>
-        <SubOptionSelector selectedSubOption={selectedSubOption} setSelectedSubOption= {setSelectedSubOption}/>
+      </header>
+      
+      <main>
+        
+        <div className="info-section">
+        <InfoBox selectedSubData={selectedSubData} setSelectedSub={setSelectedSub}/>
+        <SubListBox  subRedditsList={favoriteSubs} setSelectedSub={setSelectedSub}
+          boxTitle={"Favorite Subreddits"}/>
+        </div>
+        <div className="post-section" >
+        <OptionSelector selectedSubOption={selectedSubOption} setSelectedSubOption= {setSelectedSubOption} 
+          optionsObject = {{option1: "hot", option2:"new",option3:"rising"}}/>
         <ListOfSubsPosts selectedSubPosts={selectedSubPosts} selectedSubData={selectedSubData} /></div>
       </main>
     </div>

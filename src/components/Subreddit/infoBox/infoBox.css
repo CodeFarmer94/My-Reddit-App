@@ -1,0 +1,24 @@
+.info-box {
+    border: 1px solid rgb(158, 156, 156);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+.info-span{
+    color:white;
+    padding: 1rem 0; 
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    width: 100%;
+    border-bottom: 1px solid gray;
+}
+.description-text{
+    padding: 1rem;
+    text-align: justify
+}
+.btn-container{
+    font-size: 0.9rem;
+    color: gray;
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 0.8px solid gray;
+}

@@ -1,19 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { selectTheme } from "../../app/store";
 export default function SearchOptionSelector({ selectedSearchOption, setSelectedSearchOption}) {
+  
+  // Get option value from URL
   const pathname = window.location.pathname;
   const parts = pathname.split('/');
   const search = parts[3];
 
+  const theme = useSelector(selectTheme)
+
+  // Set option value
   const onClick = (option) => {
     setSelectedSearchOption(option);
-    console.log(option);
+   
   };
 
   return (
-    <div style={{ backgroundColor: "#8a9dbd", display: "flex", justifyContent: "left", 
-      padding: "0.8rem 0", border: "1px solid gray",borderTopLeftRadius:"5px" ,borderTopRightRadius:"5px"}}>
+    <div className={theme === "dark" ? "options-container flex-row bg3-dark-color"
+    : "options-container flex-row bg3-light-color" }>
       
       <Link to={`/searchResults/posts/${search}`}>
       <button className="options-btn"

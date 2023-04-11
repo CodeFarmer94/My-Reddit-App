@@ -1,0 +1,9 @@
+.options-container{
+   
+    padding: 0.75rem 0px;
+    border: 2px solid rgb(158, 156, 156);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom: none;
+    
+}

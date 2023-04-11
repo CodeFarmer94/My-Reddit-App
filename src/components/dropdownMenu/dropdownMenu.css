@@ -1,0 +1,51 @@
+/* Display */
+.display-none{
+    display:none
+    }
+    .display-block{
+    display:block
+    }
+    
+    /* Dropdown menu */
+    .dropdown-menu{
+    color:white;
+    padding:1rem;
+    gap:1rem;
+    font-weight:bold;
+    border-bottom: 2px solid black;
+    }
+    .dropdown-menu input{
+    border-radius: 5px;
+    height: 20px;
+    padding:0.4rem 1rem;
+    max-width: 30rem;
+    }
+    .dropdown-menu input:focus {
+    background-color: beige;
+    }
+    .dropdown-menu button {
+    border-radius: 5px;
+    padding: 0.4rem;
+    width:8rem;
+    }
+    .dropdown-sub-element{
+    margin: 0 0 1rem 1.5rem;
+    border-bottom: 1px solid white;
+    padding: 2px;
+    }
+    
+    
+    /* Dropdown menu icons */
+    .dropdown-menu img{
+    border-radius:50%;
+    width: 1.8rem;
+    height: 1.8rem;
+    }
+    
+    /* Dropdown menu items */
+    .dropdown-menu p {
+    cursor: pointer;
+    }
+    .dropdown-menu p svg {
+    font-size: 1.5rem;
+    }

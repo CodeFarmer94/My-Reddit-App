@@ -1,0 +1,40 @@
+.posts-container{
+    display:flex;
+    padding:3%;
+    border: 1px solid rgb(158, 156, 156);
+    text-align: left;
+  }
+  
+  .thumbnail-img{
+    max-height: 100px;
+    min-height: 80px;
+    max-width: 100px;
+    min-width: 80px;
+    margin: 0px 1rem 0px 0px;
+  }
+  .post-author{
+    font-size:0.9rem;
+   
+  }
+  .post-title{
+    margin: 0.4rem 0px;
+    font-weight: 500;
+  }
+  .post-author-flair{
+    background-color: rgb(213, 219, 227);
+    color: rgb(122, 17, 250);
+    padding: 0.1rem 0.4rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+  .sub-list-post-img{
+    max-height: 500px;
+    max-width: 500px;
+    margin: 1.5rem 0;
+  }
+  .sub-post-list-metadata{
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+  
