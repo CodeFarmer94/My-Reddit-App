@@ -4,7 +4,7 @@ import Home from "../home/Home.js";
 import SearchPostsBar from "../searchPostsBar/SearchPostsBar";
 import Post from "../post/Post";
 import DropdownMenu from "../dropdownMenu/DropdownMenu.js";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SearchResults from "../searchResults/SearchResults";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,7 +19,7 @@ const REDDIT_CLIENT_SECRET = "PhtmMSoqIyXE1O3a5Y5uOvEqcWB6_g";
 const REDDIT_REDIRECT_URI = "http://localhost:3000/";
 // --------
 
-function Reddit() {
+export default function Reddit() {
   const dispatch = useDispatch();
   const userData = useSelector(selectUserData);
 
@@ -146,28 +146,17 @@ function Reddit() {
         isDropdownVisible={isDropdownVisible}
         userData={userData}
       />
-      <Switch>
-        <Route path="/:subreddit/post/:id" exact>
-          <Post selectedSub={selectedSub} />
-        </Route>
+      <Routes>
+        <Route path="/:subreddit/post/:id" element={<Post selectedSub={selectedSub} />} />
 
-        <Route path="/r/:subredditName" exact>
-          <Subreddit
-            selectedSub={selectedSub}
-            setSelectedSub={setSelectedSub}
-          />
-        </Route>
+        <Route path="/r/:subredditName" element={<Subreddit selectedSub={selectedSub} setSelectedSub={setSelectedSub} />} />
 
-        <Route path="/searchResults/:option/:searchTerm" exact>
-          <SearchResults searchTerm={searchTerm} />
-        </Route>
+        <Route path="/searchResults/:option/:searchTerm/*" element={<SearchResults searchTerm={searchTerm} />} />
 
-        <Route path="/" exact>
-          <Home setSelectedSub={setSelectedSub} accessToken={accessToken} />
-        </Route>
-      </Switch>
+
+        <Route path="/" element={<Home setSelectedSub={setSelectedSub} accessToken={accessToken} />} />
+      </Routes>
     </div>
   );
 }
 
-export default Reddit;

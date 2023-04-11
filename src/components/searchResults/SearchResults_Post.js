@@ -12,7 +12,7 @@ function SearchResults_Post({ postSearchResults}) {
   const theme = useSelector(selectTheme)
   // Users cached Icons
   const [subredditIcons, setSubredditIcons] = useState({});
-
+  console.log(postSearchResults)
   // check if url is an image
   function isImageUrl(url) {
     return /\.(jpeg|jpg|gif|png)$/i.test(url);
@@ -20,7 +20,9 @@ function SearchResults_Post({ postSearchResults}) {
 
   // Get users icons and store in state
   useEffect(() => {
+    console.log(postSearchResults)
     async function getSubredditIcons() {
+      
       const subredditNames = new Set(postSearchResults.map((post) => post.subreddit));
       const subredditDataRequests = Array.from(subredditNames).map((subreddit) =>
         fetch(`https://www.reddit.com/r/${subreddit}/about.json`).then((response) =>

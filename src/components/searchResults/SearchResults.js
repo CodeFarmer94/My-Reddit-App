@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+
+import { Route, Routes} from "react-router-dom";
 import SearchResults_Subreddits from "./SearchResults_Subreddits";
 import SearchResults_Post from "./SearchResults_Post";
 import SearchOptionSelector from "./SearchOptionSelector";
 import "./searchResults.css";
 
 export default function SearchResults() {
+  
   const [subredditSearchResults, setSubredditSearchResults] = useState([]);
   const [postSearchResults, setPostSearchResults] = useState([]);
   const [selectedSearchOption, setSelectedSearchOption] = useState("posts");
@@ -64,16 +66,8 @@ export default function SearchResults() {
         selectedSearchOption={selectedSearchOption}
         setSelectedSearchOption={setSelectedSearchOption}
       />
-      <Switch>
-        <Route path={`/searchResults/posts/:searchTerm`} exact>
-          <SearchResults_Post postSearchResults={postSearchResults} />
-        </Route>
-        <Route path="/searchResults/subreddits/:searchTerm" exact>
-          <SearchResults_Subreddits
-            subredditSearchResults={subredditSearchResults}
-          />
-        </Route>
-      </Switch>
+      {selectedSearchOption === "posts" && (<SearchResults_Post postSearchResults={postSearchResults} />)}
+      {selectedSearchOption === "subreddits" && (<SearchResults_Subreddits subredditSearchResults={subredditSearchResults} />)}
     </div>
   );
 }
