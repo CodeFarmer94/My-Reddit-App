@@ -16,7 +16,7 @@ import {
 // -------  Reddit Api Settings Param
 const REDDIT_CLIENT_ID = "E8YjmRNAhz4lJY9ARSsC5A";
 const REDDIT_CLIENT_SECRET = "PhtmMSoqIyXE1O3a5Y5uOvEqcWB6_g";
-const REDDIT_REDIRECT_URI = "http://https://trendtalk.netlify.app";
+const REDDIT_REDIRECT_URI = "https://trendtalk.netlify.app";
 // --------
 
 export default function Reddit() {
@@ -38,7 +38,7 @@ export default function Reddit() {
       REDDIT_REDIRECT_URI
     )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
     
-    if (!code || !localStorage.getItem("reddit_access_token")) {
+    if (!code || accessToken) {
       window.location.href = authUrl;
     }
   }
