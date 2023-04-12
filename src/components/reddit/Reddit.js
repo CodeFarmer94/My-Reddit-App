@@ -59,7 +59,6 @@ export default function Reddit() {
       const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
         REDDIT_REDIRECT_URI
       )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
-
       if (!code || !localStorage.getItem("reddit_access_token")) {
         window.location.href = authUrl;
       }
@@ -72,9 +71,7 @@ export default function Reddit() {
     if (code) {
       getToken();
     }
-    return () => {
-      localStorage.removeItem("reddit_access_token");
-    };
+    
   }, [accessToken]);
 
   // Get UserData
