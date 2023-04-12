@@ -105,7 +105,7 @@ export default function Post() {
         }
       });
     }
-  }, [comments, getReplyAvatar,avatars]);
+  }, [comments, getReplyAvatar,replyAvatars]);
   return (
     <div
       className={
