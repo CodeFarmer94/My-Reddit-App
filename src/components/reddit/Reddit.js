@@ -16,7 +16,7 @@ import {
 // -------  Reddit Api Settings Param
 const REDDIT_CLIENT_ID = "E8YjmRNAhz4lJY9ARSsC5A";
 const REDDIT_CLIENT_SECRET = "PhtmMSoqIyXE1O3a5Y5uOvEqcWB6_g";
-const REDDIT_REDIRECT_URI = "http://localhost:3000/";
+const REDDIT_REDIRECT_URI = "http://trendtalk.netlify.app";
 // --------
 
 export default function Reddit() {
