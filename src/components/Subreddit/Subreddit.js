@@ -75,6 +75,7 @@ const headerTitle = selectedSubData.data.title;
             <img
               className="banner-bg"
               src={headerBannerURL ? headerBannerURL : headerImgURL}
+              alt="banner-img"
             />
            
           

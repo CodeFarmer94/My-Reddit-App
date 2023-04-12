@@ -7,6 +7,7 @@ import RedditLogo from "../../images/RedditLogo.png";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../app/store";
 import { Link } from "react-router-dom";
+import { useCallback } from "react";
 import "./post.css";
 
 export default function Post() {
@@ -40,7 +41,6 @@ export default function Post() {
         `https://www.reddit.com/r/${subreddit}/about.json?flair_enabled=true`
       );
       const data = await response.json();
-      console.log(data);
       setPostSubredditData(data);
     }
     async function getPostData() {
@@ -56,18 +56,19 @@ export default function Post() {
   }, [id, subreddit]);
 
   // Get Avatar of eacth user that has commented
+  const getUserAvatar = useCallback(async (user) => {
+    const response = await fetch(
+      `https://www.reddit.com/user/${user}/about.json`
+    );
+    const data = await response.json();
+    const avatarUrl = data.data.snoovatar_img;
+    setAvatars((avatars) => ({
+      ...avatars,
+      [user]: avatarUrl,
+    }));
+  }, [setAvatars]);
+  
   useEffect(() => {
-    async function getUserAvatar(user) {
-      const response = await fetch(
-        `https://www.reddit.com/user/${user}/about.json`
-      );
-      const data = await response.json();
-      const avatarUrl = data.data.snoovatar_img;
-      setAvatars((avatars) => ({
-        ...avatars,
-        [user]: avatarUrl,
-      }));
-    }
     if (comments) {
       comments.forEach((comment) => {
         const user = comment.data.author;
@@ -76,22 +77,22 @@ export default function Post() {
         }
       });
     }
-  }, [comments]);
-
+  }, [comments, getUserAvatar]);
+  
   // Get Avatar of each users that has replied
-  useEffect(() => {
-    async function getReplyAvatar(reply) {
-      const response = await fetch(
-        `https://www.reddit.com/user/${reply.data.author}/about.json`
-      );
-      const data = await response.json();
-      const avatarUrl = data.data.snoovatar_img;
-      setReplyAvatars((replyAvatars) => ({
-        ...replyAvatars,
-        [reply.data.id]: avatarUrl,
-      }));
-    }
+  const getReplyAvatar = useCallback(async (reply) => {
+    const response = await fetch(
+      `https://www.reddit.com/user/${reply.data.author}/about.json`
+    );
+    const data = await response.json();
+    const avatarUrl = data.data.snoovatar_img;
+    setReplyAvatars((replyAvatars) => ({
+      ...replyAvatars,
+      [reply.data.id]: avatarUrl,
+    }));
+  }, []);
 
+  useEffect(() => {
     if (comments) {
       comments.forEach((comment) => {
         if (comment.data.replies) {
@@ -104,7 +105,7 @@ export default function Post() {
         }
       });
     }
-  }, [comments]);
+  }, [comments, getReplyAvatar]);
   return (
     <div
       className={
@@ -123,6 +124,7 @@ export default function Post() {
                     <img
                       src={postSubredditData.data.icon_img}
                       className="sl-icon"
+                      alt="subreddit icon"
                     />
                   )}
                   <p
@@ -146,7 +148,7 @@ export default function Post() {
               <div className="post-content">
                 <h3>{post.title}</h3>
                 {isImageUrl(post.url) ? (
-                  <img src={post.url} alt="post-image" id="post-page-image" />
+                  <img src={post.url} alt="post" id="post-page-image" />
                 ) : null}
 
                 {post.secure_media && post.secure_media.reddit_video ? (
@@ -194,10 +196,12 @@ export default function Post() {
                     <strong>{user}</strong>
                     <span>{comment.data.is_submitter ? "AUTHOR" : ""}</span>
                   </p>
-                  <p>• {getTimeDiff(comment.data.created_utc)}</p>
+                  <p style={{color: theme === "dark" ? "white" : "gray"}}>
+                    • {getTimeDiff(comment.data.created_utc)}
+                  </p>
                   {comment.data.all_awardings &&
                     comment.data.all_awardings.map((icon) => (
-                      <img src={icon.icon_url} id="award-icon" />
+                      <img src={icon.icon_url} id="award-icon" alt="" />
                     ))}
                 </div>
                 <div className="comment-content">
@@ -247,7 +251,9 @@ export default function Post() {
                                     {reply.data.is_submitter ? "AUTHOR" : ""}
                                   </span>
                                 </p>
-                                <p>• {getTimeDiff(reply.data.created_utc)}</p>
+                                <p style={{color: theme === "dark" ? "white" : "gray"}}>
+                                  • {getTimeDiff(reply.data.created_utc)}
+                                  </p>
                               </div>
                               <div className="comment-content">
                                 <ReactMarkdown>{reply.data.body}</ReactMarkdown>

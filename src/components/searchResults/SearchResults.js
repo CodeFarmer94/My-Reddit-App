@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-
-import { Route, Routes} from "react-router-dom";
-import SearchResults_Subreddits from "./SearchResults_Subreddits";
-import SearchResults_Post from "./SearchResults_Post";
+import SearchResults_Subreddits from "./SearchResultsSubreddits";
+import SearchResults_Post from "./SearchResultsPost";
 import SearchOptionSelector from "./SearchOptionSelector";
 import "./searchResults.css";
 
@@ -34,7 +32,7 @@ export default function SearchResults() {
       }
     }
     getPostsBySearchTerm();
-  }, [search, selectedSearchOption]);
+  }, [search, selectedSearchOption,searchOption]);
 
   useEffect(() => {
   
@@ -51,14 +49,14 @@ export default function SearchResults() {
         setSubredditSearchResults(
           data.data.children.map((subreddit) => subreddit.data)
         );
-        console.log(subredditSearchResults);
+       
       } catch (error) {
         console.error(error);
         return [];
       }
     }
     getSubredditsBySearchTerm();
-  }, [search, selectedSearchOption]);
+  }, [search, selectedSearchOption,searchOption,subredditSearchResults]);
 
   return (
     <div className="searchResults-section">
