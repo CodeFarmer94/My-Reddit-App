@@ -76,7 +76,7 @@ export default function Reddit() {
     return () => {
       localStorage.removeItem("reddit_access_token");
     };
-  }, []);
+  }, [authorize]);
 
   // Get UserData
   useEffect(() => {
