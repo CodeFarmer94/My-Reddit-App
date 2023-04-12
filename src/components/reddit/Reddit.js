@@ -67,7 +67,7 @@ export default function Reddit() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    if (!code && !localStorage.getItem("reddit_access_token")) {
+    if (!code && !accessToken) {
       authorize();
       return;
     }
