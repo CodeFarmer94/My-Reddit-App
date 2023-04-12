@@ -73,7 +73,6 @@ export default function Reddit() {
       getToken();
     }
     
-
   }, [accessToken]);
 
   // Get UserData
