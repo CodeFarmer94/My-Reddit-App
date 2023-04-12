@@ -77,7 +77,7 @@ export default function Post() {
         }
       });
     }
-  }, [comments, getUserAvatar]);
+  }, [comments, getUserAvatar,avatars]);
   
   // Get Avatar of each users that has replied
   const getReplyAvatar = useCallback(async (reply) => {
@@ -105,7 +105,7 @@ export default function Post() {
         }
       });
     }
-  }, [comments, getReplyAvatar]);
+  }, [comments, getReplyAvatar,avatars]);
   return (
     <div
       className={

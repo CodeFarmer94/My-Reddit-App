@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import SearchResults_Subreddits from "./SearchResultsSubreddits";
-import SearchResults_Post from "./SearchResultsPost";
+import SearchResultsSubreddits from "./SearchResultsSubreddits";
+import SearchResultsPost from "./SearchResultsPost";
 import SearchOptionSelector from "./SearchOptionSelector";
 import "./searchResults.css";
 
@@ -64,8 +64,8 @@ export default function SearchResults() {
         selectedSearchOption={selectedSearchOption}
         setSelectedSearchOption={setSelectedSearchOption}
       />
-      {selectedSearchOption === "posts" && (<SearchResults_Post postSearchResults={postSearchResults} />)}
-      {selectedSearchOption === "subreddits" && (<SearchResults_Subreddits subredditSearchResults={subredditSearchResults} />)}
+      {selectedSearchOption === "posts" && (<SearchResultsPost postSearchResults={postSearchResults} />)}
+      {selectedSearchOption === "subreddits" && (<SearchResultsSubreddits subredditSearchResults={subredditSearchResults} />)}
     </div>
   );
 }
