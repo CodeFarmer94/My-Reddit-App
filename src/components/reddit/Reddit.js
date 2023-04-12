@@ -16,7 +16,7 @@ import {
 // -------  Reddit Api Settings Param
 const REDDIT_CLIENT_ID = "E8YjmRNAhz4lJY9ARSsC5A";
 const REDDIT_CLIENT_SECRET = "PhtmMSoqIyXE1O3a5Y5uOvEqcWB6_g";
-const REDDIT_REDIRECT_URI = "https://trendtalk.netlify.app";
+const REDDIT_REDIRECT_URI = "https://trendtalk.netlify.app/";
 // --------
 
 export default function Reddit() {
@@ -69,7 +69,6 @@ export default function Reddit() {
     const code = urlParams.get("code");
     if (!code && !localStorage.getItem("reddit_access_token")) {
       authorize();
-      return;
     }
     if (code) {
       getToken();
