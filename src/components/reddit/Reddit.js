@@ -54,14 +54,12 @@ export default function Reddit() {
   useEffect(() => {
     // Redirect the user to the authorization URL if code is not present in URL
     function authorize() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
       const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
         REDDIT_REDIRECT_URI
       )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
         window.location.href = authUrl;
-      
     }
+    
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (!code && !localStorage.getItem("reddit_access_token")) {
