@@ -9,11 +9,16 @@ nav {
     height: 4rem;
   }
   
-  /* Styles for the logo */
+  #website-logo{
+    max-width: 100%;
+    height: auto;
+  }
+  /* Styles for the UserIcon */
   nav img {
     width: 10rem;
     border-radius: 5px;
   }
+
   
   /* Styles for the search input */
   nav input {
@@ -91,6 +96,8 @@ nav {
     #user-icon {
       display: none;
     }
+    
+    
   }
   
   /* Styles for the desktop view */
@@ -100,7 +107,7 @@ nav {
       width: 100px;
       height: 50px;
     }
-  
+    
     .mobile-options span {
       display: none;
     }

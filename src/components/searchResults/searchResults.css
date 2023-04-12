@@ -5,12 +5,20 @@
     margin: 2rem auto;
   }
 }
+@media only screen and (max-width: 768px) {
+  .post-results-container {
+    display: flex;
+    flex-direction: column;
+  }
+ 
+}
 
 /* Styles for post results */
 .post-results-container {
   display: flex;
   padding: 0.8rem;
   border: 1px solid rgb(158, 156, 156);
+  
 }
 
 .post-results-column-flex {
@@ -24,6 +32,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
+  flex-wrap: wrap;
 }
 
 #post-icon {

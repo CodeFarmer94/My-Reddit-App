@@ -49,7 +49,7 @@ export default function SearchPostsBar({
   return (
     <nav className="light-theme-color">
       <Link to="/">
-        <img alt="website logo" src={TrenkTalkLogo} />
+        <img alt="website logo" src={TrenkTalkLogo} id="website-logo"/>
       </Link>
       <section className="nav-section">
         <input
@@ -66,7 +66,7 @@ export default function SearchPostsBar({
           <p className="karma">{userData.total_karma} karma</p>
         </div>
       </section>
-      <section className="nav-section flex-row">
+      <section className="nav-section flex-row no-mobile">
         <p>{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
         <div class="toggle-slide">
           <input

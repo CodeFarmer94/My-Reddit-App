@@ -1,19 +1,32 @@
-import { useSelector } from "react-redux";
+
 import { selectUserFavSubs } from "../../app/store";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import RedditLogo from "../../images/RedditLogo.png";
 import { FaUserNinja } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { selectTheme } from "../../app/store";
+import { toggleTheme } from "../../app/store";
+import { useDispatch } from "react-redux";
 import "./dropdownMenu.css"
 
 export default function DropdownMenu({ setSearchTerm,isDropdownVisible,setIsDropdownVisible,userData,setSelectedSub }){
 
-   
+    const dispatch = useDispatch()
+    const theme = useSelector(selectTheme)
     const favoriteSubs = useSelector(selectUserFavSubs);
     const [searchInputText, setSearchInputText] = useState("")
     const [isFavSubDropdownVisible, setIsFavSubDropdownVisible] = useState(false)
 
+      // Dispatch theme change to store
+     const setTheme = () => {
+    if (theme === "dark") {
+      dispatch(toggleTheme("light"));
+    } else {
+      dispatch(toggleTheme("dark"));
+    }
+  };
     // Handle toggling the main dropdown visibility
     const handleDropdown = () => {
         setIsDropdownVisible(prevState=> !prevState)
@@ -77,6 +90,18 @@ export default function DropdownMenu({ setSearchTerm,isDropdownVisible,setIsDrop
             <p className="text-left flex-row"><FaUserNinja/>{userData.name}</p>
             </div>  
             </div>
+            <section className="nav-section flex-row">
+        <p>{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
+        <div class="toggle-slide">
+          <input
+            type="checkbox"
+            id="toggle"
+            checked={theme === "dark" ? true : false}
+            onClick={setTheme}
+          />
+          <label for="toggle" class="toggle-icon"></label>
+        </div>
+      </section>
             <p onClick={handleFavSubDropdown} className="text-left flex-row"><FaHeart/>Favorite Subs</p>
             <div className={isFavSubDropdownVisible ? "display-block" : "display-none"}>{favoriteSubsList}</div>
             </div>  

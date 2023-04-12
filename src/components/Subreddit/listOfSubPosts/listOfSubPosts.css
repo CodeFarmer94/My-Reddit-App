@@ -28,8 +28,8 @@
     font-size: 0.9rem;
   }
   .sub-list-post-img{
-    max-height: 500px;
-    max-width: 500px;
+    max-height: auto;
+    max-width: 100%;
     margin: 1.5rem 0;
   }
   .sub-post-list-metadata{

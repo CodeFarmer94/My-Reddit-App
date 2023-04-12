@@ -5,5 +5,6 @@
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     border-bottom: none;
+    justify-content: space-around;
     
 }

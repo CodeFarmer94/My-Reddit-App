@@ -128,6 +128,19 @@ export default function Home({ setSelectedSub, accessToken }) {
                 <div className="post-results-content">
                   <p>{post.data.title}</p>
                 </div>
+                {isImageUrl(post.data.thumbnail) && (
+                <img
+                  style={{
+                    width: post.data.thumbnail_width,
+                    height: post.thumbnail_height,
+                    margin: "1rem auto"
+                  }}
+                  src={post.data.thumbnail}
+                  id="post-image"
+                  className="no-desktop"
+                  alt="post-thumbnail"
+                />
+              )}
                 <div
                   className="post-results-metadata"
                   style={{ color: theme === "dark" ? "lightblue" : "gray" }}
@@ -146,6 +159,7 @@ export default function Home({ setSelectedSub, accessToken }) {
                   }}
                   src={post.data.thumbnail}
                   id="post-image"
+                  className="no-mobile"
                   alt="post-thumbnail"
                 />
               )}
