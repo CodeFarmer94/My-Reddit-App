@@ -29,20 +29,7 @@ export default function Reddit() {
   const [accessToken, setAccessToken] = useState("");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-
-  // Redirect the user to the authorization URL if code is not present in URL
-  function authorize() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
-      REDDIT_REDIRECT_URI
-    )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
-    
-    if (!code || accessToken) {
-      window.location.href = authUrl;
-    }
-  }
-// Get Access token using the authorization Code
+  // Get Access token using the authorization Code
   async function getToken() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
@@ -65,6 +52,18 @@ export default function Reddit() {
   // Token retreiving
 
   useEffect(() => {
+    // Redirect the user to the authorization URL if code is not present in URL
+    function authorize() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+      const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
+        REDDIT_REDIRECT_URI
+      )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
+
+      if (!code || accessToken) {
+        window.location.href = authUrl;
+      }
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (!code && !localStorage.getItem("reddit_access_token")) {
@@ -76,7 +75,7 @@ export default function Reddit() {
     return () => {
       localStorage.removeItem("reddit_access_token");
     };
-  }, [authorize]);
+  }, [accessToken]);
 
   // Get UserData
   useEffect(() => {
@@ -101,7 +100,7 @@ export default function Reddit() {
     if (localStorage.getItem("reddit_access_token")) {
       getUserData();
     }
-  }, [dispatch,accessToken]);
+  }, [dispatch, accessToken]);
 
   // Get user subscribded subreddits
   useEffect(() => {
@@ -146,16 +145,33 @@ export default function Reddit() {
         userData={userData}
       />
       <Routes>
-        <Route path="/:subreddit/post/:id" element={<Post selectedSub={selectedSub} />} />
+        <Route
+          path="/:subreddit/post/:id"
+          element={<Post selectedSub={selectedSub} />}
+        />
 
-        <Route path="/r/:subredditName" element={<Subreddit selectedSub={selectedSub} setSelectedSub={setSelectedSub} />} />
+        <Route
+          path="/r/:subredditName"
+          element={
+            <Subreddit
+              selectedSub={selectedSub}
+              setSelectedSub={setSelectedSub}
+            />
+          }
+        />
 
-        <Route path="/searchResults/:option/:searchTerm/*" element={<SearchResults searchTerm={searchTerm} />} />
+        <Route
+          path="/searchResults/:option/:searchTerm/*"
+          element={<SearchResults searchTerm={searchTerm} />}
+        />
 
-
-        <Route path="/" element={<Home setSelectedSub={setSelectedSub} accessToken={accessToken} />} />
+        <Route
+          path="/"
+          element={
+            <Home setSelectedSub={setSelectedSub} accessToken={accessToken} />
+          }
+        />
       </Routes>
     </div>
   );
 }
-
