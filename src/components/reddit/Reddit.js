@@ -46,7 +46,6 @@ export default function Reddit() {
     const response = await fetch(tokenUrl, options);
     const data = await response.json();
     localStorage.setItem("reddit_access_token", data.access_token);
-    setAccessToken(data.access_token);
     window.history.replaceState({}, "", window.location.pathname);
   }
   // Token retreiving
@@ -71,8 +70,7 @@ export default function Reddit() {
     if (code) {
       getToken();
     }
-    
-  }, [accessToken]);
+  }, []);
 
   // Get UserData
   useEffect(() => {
@@ -97,7 +95,7 @@ export default function Reddit() {
     if (localStorage.getItem("reddit_access_token")) {
       getUserData();
     }
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 
   // Get user subscribded subreddits
   useEffect(() => {
@@ -122,7 +120,7 @@ export default function Reddit() {
     if (localStorage.getItem("reddit_access_token")) {
       getUserFavSubs();
     }
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 
   // Get list of subreddit per search
 
