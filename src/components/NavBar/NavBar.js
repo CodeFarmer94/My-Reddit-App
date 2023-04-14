@@ -25,7 +25,9 @@ export default function NavBar({
   const setTheme = () => {
     if (theme === "dark") {
       dispatch(toggleTheme("light"));
+      localStorage.setItem("theme", "light")
     } else {
+      localStorage.setItem("theme", "dark")
       dispatch(toggleTheme("dark"));
     }
   };

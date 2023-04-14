@@ -30,7 +30,6 @@ export default function Reddit() {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  
 
   // Get Access token using the authorization Code
   async function getToken() {
