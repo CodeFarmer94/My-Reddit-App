@@ -1,83 +1,22 @@
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { FaHeart } from "react-icons/fa";
+
 import { selectTheme } from "../../../app/store";
 import { useSelector } from "react-redux";
 import { getContrastColor } from "../../../functions/getContrastColor";
-import {
-  addFavSubToStore,
-  selectUserFavSubs,
-  removeFavSubFromStore,
-} from "../../../app/store";
+import SubscribreBtn from "../../subscribeBtn/SubscribeBtn";
+
 import "./infoBox.css"
 
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 
 
-export default function InfoSection({ selectedSubData }) {
-  // State setting and hooks calls
-  const [isSubFavorite, setIsSubFavorite] = useState(false);
-  const favoriteSubs = useSelector(selectUserFavSubs);
-  const dispatch = useDispatch();
+
+
+export default function InfoSection({ selectedSubData, isLoggedIn }) {
+  
+ 
+  
+  
   const theme = useSelector(selectTheme)
-  // Setting isFavorite State if Subreddit is present in favoriteSubs
-  useEffect(() => {
-    if (selectedSubData && favoriteSubs.length !== 0) {
-      setIsSubFavorite(
-        favoriteSubs.some(
-          (subreddit) =>
-            subreddit.data.display_name === selectedSubData.data.display_name
-        )
-      );
-    }
-  }, [selectedSubData, favoriteSubs]);
-
-  // Async Function  to add sub to user reddit account
-  async function addSubToReddit(subreddit) {
-     await fetch(
-      `https://oauth.reddit.com/api/subscribe?action=sub&sr_name=${subreddit}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "reddit_access_token"
-          )}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    dispatch(addFavSubToStore(selectedSubData));
-  }
-
-  // Async Function t to remove sub from user reddit account
-  async function removeSubFromReddit(subreddit) {
-     await fetch(
-      `https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            "reddit_access_token"
-          )}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-   
-    console.log(subreddit);
-    dispatch(removeFavSubFromStore(selectedSubData));
-  }
-
-  // Add/Remove sub on button click
-  const handleClick = (subreddit) => {
-    if (isSubFavorite) {
-      removeSubFromReddit(subreddit);
-    } else {
-      addSubToReddit(subreddit);
-    }
-  };
-
-  // Extracting data from selectedSubData fetch call
   const primaryColor = selectedSubData.data.primary_color
     ? selectedSubData.data.primary_color
     : "#063970";
@@ -104,15 +43,9 @@ export default function InfoSection({ selectedSubData }) {
           <ReactMarkdown>{descriptionText}</ReactMarkdown>
         </p>
         <div className="btn-container"
+        style={{color: theme === "dark" ? "white" : "gray"}}
         >
-          <button
-            onClick={() => handleClick(selectedSubData.data.display_name)}
-            className="options-btn"
-            style={{ color: isSubFavorite ? "#d10228" : "black", margin: "auto" }}
-          >
-            <FaHeart />
-            <span style={{marginLeft:"0.2rem"}}>Favorite</span>
-          </button>
+          {isLoggedIn ? <SubscribreBtn selectedSubData={selectedSubData}/> : null}
           Creato il {creationDate}
         </div>
         <div className="flex-row"

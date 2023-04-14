@@ -31,11 +31,8 @@ export default function Home({ setSelectedSub, accessToken }) {
       console.log(data.data.children);
       setTrendingSubreddits(data.data.children);
     }
-    // Only fetch trending subreddits if there is an access token
-    if (localStorage.getItem("reddit_access_token")) {
       getTrendingSubreddits();
-    }
-  }, [accessToken]);
+  }, []);
 
   useEffect(() => {
     // Fetch popular posts and set state

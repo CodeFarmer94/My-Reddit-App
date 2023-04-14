@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import RedditLogo from "../../images/RedditLogo.png";
 import { FaUserNinja } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../app/store";
 import { toggleTheme } from "../../app/store";
@@ -102,7 +104,9 @@ export default function DropdownMenu({ setSearchTerm,isDropdownVisible,setIsDrop
           <label for="toggle" class="toggle-icon"></label>
         </div>
       </section>
-            <p onClick={handleFavSubDropdown} className="text-left flex-row"><FaHeart/>Favorite Subs</p>
+            <p onClick={handleFavSubDropdown} className="text-left flex-row"><FaHeart/>Favorite Subs
+            {isFavSubDropdownVisible ? <FaAngleDown/> : <FaAngleRight/>}
+            </p>
             <div className={isFavSubDropdownVisible ? "display-block" : "display-none"}>{favoriteSubsList}</div>
             </div>  
             </div>

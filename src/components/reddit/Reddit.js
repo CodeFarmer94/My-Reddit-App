@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Subreddit from "../Subreddit/Subreddit.js";
 import Home from "../home/Home.js";
-import SearchPostsBar from "../searchPostsBar/SearchPostsBar";
+import NavBar from "../NavBar/NavBar.js";
 import Post from "../post/Post";
 import DropdownMenu from "../dropdownMenu/DropdownMenu.js";
 import { Routes, Route } from "react-router-dom";
@@ -16,7 +16,7 @@ import {
 // -------  Reddit Api Settings Param
 const REDDIT_CLIENT_ID = "E8YjmRNAhz4lJY9ARSsC5A";
 const REDDIT_CLIENT_SECRET = "PhtmMSoqIyXE1O3a5Y5uOvEqcWB6_g";
-const REDDIT_REDIRECT_URI = "https://trendtalk.netlify.app/";
+const REDDIT_REDIRECT_URI = "http://localhost:3000";
 // --------
 
 export default function Reddit() {
@@ -28,6 +28,9 @@ export default function Reddit() {
   const [searchTerm, setSearchTerm] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  
 
   // Get Access token using the authorization Code
   async function getToken() {
@@ -45,44 +48,37 @@ export default function Reddit() {
     };
     const response = await fetch(tokenUrl, options);
     const data = await response.json();
-    localStorage.setItem("reddit_access_token", data.access_token);
+    sessionStorage.setItem("reddit_access_token", data.access_token);
     setAccessToken(data.access_token);
     window.history.replaceState({}, "", window.location.pathname);
   }
-  // Token retreiving
+ 
+  function authorize() {
+    const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
+      REDDIT_REDIRECT_URI
+    )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
+      window.location.href = authUrl;
+    }
 
   useEffect(() => {
-    // Redirect the user to the authorization URL if code is not present in URL
-    function authorize() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-      const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
-        REDDIT_REDIRECT_URI
-      )}&duration=temporary&scope=read,identity,history,mysubreddits,subscribe`;
-
-      if (!code || !localStorage.getItem("reddit_access_token")) {
-        window.location.href = authUrl;
-      }
-    }
+    console.log("get Token effect run")
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    if (!code && !localStorage.getItem("reddit_access_token")) {
-      authorize();
-    }
     if (code) {
       getToken();
     }
-    
-  }, [accessToken]);
+  
+  }, []);
 
   // Get UserData
   useEffect(() => {
     async function getUserData() {
+      console.log("get user data fetch run")
       const options = {
         method: "GET",
         headers: {
           "User-Agent": "Reddit_App",
-          Authorization: `bearer ${localStorage.getItem(
+          Authorization: `bearer ${sessionStorage.getItem(
             "reddit_access_token"
           )}`,
         },
@@ -95,7 +91,7 @@ export default function Reddit() {
       dispatch(setUserData(data));
     }
     // if access token exist run the function
-    if (localStorage.getItem("reddit_access_token")) {
+    if (sessionStorage.getItem("reddit_access_token")) {
       getUserData();
     }
   }, [dispatch, accessToken]);
@@ -103,11 +99,12 @@ export default function Reddit() {
   // Get user subscribded subreddits
   useEffect(() => {
     async function getUserFavSubs() {
+      console.log("user fav sub fetch run")
       const options = {
         method: "GET",
         headers: {
           "User-Agent": "Reddit_App",
-          Authorization: `bearer ${localStorage.getItem(
+          Authorization: `bearer ${sessionStorage.getItem(
             "reddit_access_token"
           )}`,
         },
@@ -127,13 +124,24 @@ export default function Reddit() {
 
   // Get list of subreddit per search
 
+  useEffect(()=>{
+      console.log("set isLogged in run")
+      console.log((sessionStorage.getItem("reddit_access_token")))
+      if(sessionStorage.getItem("reddit_access_token")){
+        setIsLoggedIn(true)
+      }
+      console.log(isLoggedIn)
+  },[isLoggedIn,accessToken])
+
   return (
     <div>
-      <SearchPostsBar
+      <NavBar
         setSearchTerm={setSearchTerm}
         userData={userData}
         setIsDropdownVisible={setIsDropdownVisible}
         isDropdownVisible={isDropdownVisible}
+        authorize={authorize}
+        isLoggedIn={isLoggedIn}
       />
       <DropdownMenu
         setSearchTerm={setSearchTerm}
@@ -154,15 +162,14 @@ export default function Reddit() {
             <Subreddit
               selectedSub={selectedSub}
               setSelectedSub={setSelectedSub}
+              isLoggedIn={isLoggedIn}
             />
           }
         />
-
         <Route
           path="/searchResults/:option/:searchTerm/*"
           element={<SearchResults searchTerm={searchTerm} />}
         />
-
         <Route
           path="/"
           element={

@@ -1,5 +1,7 @@
 
-  
+    .display-none{
+        display: none !important;
+    }
     
     /* Dark theme colors */
     .bg-dark-color {
@@ -85,6 +87,19 @@
     display: flex;
     align-items: center;
     padding: 0.3rem 0.5rem;
+    }
+    .subscribe-btn{
+    border: 1px solid rgb(174, 170, 170);
+    color:white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem auto;
+    font-family: monospace
     }
     
     .comment-icon {

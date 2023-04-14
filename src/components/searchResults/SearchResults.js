@@ -3,6 +3,7 @@ import SearchResultsSubreddits from "./SearchResultsSubreddits";
 import SearchResultsPost from "./SearchResultsPost";
 import SearchOptionSelector from "./SearchOptionSelector";
 import "./searchResults.css";
+import { useCallback } from "react";
 
 export default function SearchResults() {
   
@@ -12,51 +13,45 @@ export default function SearchResults() {
   const pathname = window.location.pathname;
   const parts = pathname.split("/");
   const search = parts[3];
-  const searchOption = parts[2];
 
-  useEffect(() => {
-   
-    async function getPostsBySearchTerm() {
-      if (searchOption === "posts") {
-        setSelectedSearchOption("posts");
-      }
-      try {
-        const response = await fetch(
-          `https://www.reddit.com/search.json?q=${search}&sort=popular`
-        );
-        const data = await response.json();
-        setPostSearchResults(data.data.children.map((post) => post.data));
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
+ 
+  const getPostsBySearchTerm = useCallback(async ()=>{
+    try {
+      const response = await fetch(
+        `https://www.reddit.com/search.json?q=${search}&sort=popular`
+      );
+      const data = await response.json();
+      console.log(data)
+      setPostSearchResults(data.data.children.map((post) => post.data));
+      
+    } catch (error) {
+      console.error(error);
+      return [];
     }
-    getPostsBySearchTerm();
-  }, [search, selectedSearchOption,searchOption]);
+  },[search])
 
-  useEffect(() => {
+  const getSubredditsBySearchTerm = useCallback(async()=> {
+    try {
+      const response = await fetch(
+        `https://www.reddit.com/subreddits/search.json?q=${search}&sort=popular`
+      );
+      const data = await response.json();
+
+      setSubredditSearchResults(
+        data.data.children.map((subreddit) => subreddit.data)
+      );
+     
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  },[search])
   
-    async function getSubredditsBySearchTerm() {
-      if (searchOption === "subreddits") {
-        setSelectedSearchOption("subreddits");
-      }
-      try {
-        const response = await fetch(
-          `https://www.reddit.com/subreddits/search.json?q=${search}&sort=popular`
-        );
-        const data = await response.json();
-
-        setSubredditSearchResults(
-          data.data.children.map((subreddit) => subreddit.data)
-        );
-       
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
-    }
+  useEffect(() => {
+    console.log("search effect run")
+    getPostsBySearchTerm();
     getSubredditsBySearchTerm();
-  }, [search, selectedSearchOption,searchOption,subredditSearchResults]);
+  }, [getPostsBySearchTerm,getSubredditsBySearchTerm]);
 
   return (
     <div className="searchResults-section">

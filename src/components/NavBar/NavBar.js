@@ -1,4 +1,4 @@
-import "./searchPostsBar.css";
+import "./NavBar.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
@@ -7,10 +7,12 @@ import { useSelector } from "react-redux";
 import { selectTheme } from "../../app/store";
 import { useDispatch } from "react-redux";
 import { toggleTheme } from "../../app/store";
-export default function SearchPostsBar({
+export default function NavBar({
   setSearchTerm,
   userData,
   setIsDropdownVisible,
+  authorize,
+  isLoggedIn
  
 }) {
 
@@ -46,6 +48,11 @@ export default function SearchPostsBar({
       searchReddit();
     }
   };
+  const handleClick = () => {
+    if(!isLoggedIn){
+      authorize()
+    }
+  }
   return (
     <nav className="light-theme-color">
       <Link to="/">
@@ -59,13 +66,6 @@ export default function SearchPostsBar({
           placeholder="Search Reddit..."
         />
       </section>
-      <section className="nav-section">
-        <img src={userData.icon_img} alt="user icon" id="user-icon" />
-        <div className="user-stats">
-          <p>{userData.name}</p>
-          <p className="karma">{userData.total_karma} karma</p>
-        </div>
-      </section>
       <section className="nav-section flex-row no-mobile">
         <p>{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
         <div class="toggle-slide">
@@ -78,6 +78,14 @@ export default function SearchPostsBar({
           <label for="toggle" class="toggle-icon"></label>
         </div>
       </section>
+      <section className={isLoggedIn ? "nav-section" : "nav-section display-none"}>
+        <img src={userData.icon_img} alt="user icon" id="user-icon" />
+        <div className="user-stats">
+          <p>{userData.name}</p>
+          <p className="karma">{userData.total_karma} karma</p>
+        </div>
+      </section>
+      <button className="login-btn" onClick ={ ()=> handleClick()}>{isLoggedIn ? "You are Logged" : "Login"}</button>
       <div className="mobile-options" onClick={handleDropdown}>
         <span>
           <FaBars />

@@ -36,6 +36,7 @@ export default function Post() {
 
   // Get Data about the current post's subreddit
   useEffect(() => {
+    console.log("get post data effect run")
     async function getSubredditData() {
       const response = await fetch(
         `https://www.reddit.com/r/${subreddit}/about.json?flair_enabled=true`
@@ -48,6 +49,7 @@ export default function Post() {
         `https://www.reddit.com/r/${subreddit}/comments/${id}.json`
       );
       const data = await response.json();
+      console.log(data[0].data.children[0].data)
       setPost(data[0].data.children[0].data);
       setComments(data[1].data.children);
     }
@@ -67,17 +69,18 @@ export default function Post() {
       [user]: avatarUrl,
     }));
   }, [setAvatars]);
+
   
   useEffect(() => {
     if (comments) {
       comments.forEach((comment) => {
         const user = comment.data.author;
-        if (!avatars[user]) {
+   
           getUserAvatar(user);
         }
-      });
+      )
     }
-  }, [comments, getUserAvatar,avatars]);
+  }, [comments, getUserAvatar]);
   
   // Get Avatar of each users that has replied
   const getReplyAvatar = useCallback(async (reply) => {
@@ -97,15 +100,13 @@ export default function Post() {
       comments.forEach((comment) => {
         if (comment.data.replies) {
           comment.data.replies.data.children.forEach((reply) => {
-            const replyId = reply.data.id;
-            if (!replyAvatars[replyId]) {
               getReplyAvatar(reply);
-            }
+            
           });
         }
       });
     }
-  }, [comments, getReplyAvatar,replyAvatars]);
+  }, [comments, getReplyAvatar]);
   return (
     <div
       className={
@@ -149,7 +150,7 @@ export default function Post() {
                 <h3>{post.title}</h3>
                 {isImageUrl(post.url) ? (
                   <img src={post.url} alt="post" id="post-page-image" />
-                ) : null}
+                ) : isImageUrl(post.thumbnail) ? <img src={post.thumbnail} alt="post" id="post-page-image-small" /> : null}
 
                 {post.secure_media && post.secure_media.reddit_video ? (
                   <video

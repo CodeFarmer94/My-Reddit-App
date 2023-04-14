@@ -5,12 +5,14 @@ import OptionSelector from "../optionSelector/OptionSelector";
 import InfoBox from "./infoBox/InfoBox";
 import SubListBox from "../subListBox/SubListBox";
 import { selectUserFavSubs } from "../../app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import SubscribreBtn from "../subscribeBtn/SubscribeBtn";
+import { removeFavSubFromStore } from "../../app/store";
 import "./Subreddit.css";
 
 
-export default function Subreddit({ setSelectedSub }) {
+export default function Subreddit({ setSelectedSub,isLoggedIn }) {
 
 const [selectedSubPosts, setSelectedSubPosts] = useState([]);
 const [selectedSubData, setSelectedSubData] = useState({ data: {} });
@@ -21,7 +23,7 @@ const favoriteSubs = useSelector(selectUserFavSubs);
  const pathname = window.location.pathname;
  const parts = pathname.split('/');
  const subredditName = parts[2];
-
+  const dispatch = useDispatch()
  useEffect(() => {
   window.scrollTo(0, 0);
 }, [subredditName]);
@@ -51,7 +53,22 @@ const favoriteSubs = useSelector(selectUserFavSubs);
   
   }, [subredditName,selectedSubOption]);
 
-
+  async function removeSubFromReddit(subreddit) {
+    await fetch(
+     `https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`,
+     {
+       method: "POST",
+       headers: {
+         Authorization: `Bearer ${localStorage.getItem(
+           "reddit_access_token"
+         )}`,
+         "Content-Type": "application/json",
+       },
+     }
+   );
+   console.log(subreddit);
+   dispatch(removeFavSubFromStore(selectedSubData));
+ }
 
  
 
@@ -70,20 +87,16 @@ const headerTitle = selectedSubData.data.title;
     <div>
       <header >
         <div style={{ backgroundColor: primaryColor, minHeight: "10vh" }}>
-        
-          
+      
             <img
               className="banner-bg"
               src={headerBannerURL ? headerBannerURL : headerImgURL}
               alt="banner-img"
             />
-           
-          
       
         </div>
         <div
             className="title-div"
-            style={{margin: "1rem 0 1rem 0"}}
           >
             <img
               src={iconImg}
@@ -92,10 +105,15 @@ const headerTitle = selectedSubData.data.title;
             />
             <div
               className="title-div-col"
+
             >
               <h1>{headerTitle}</h1>
               <p>{`r/${subredditName}`}</p>
-              <p className="sub-description-mobile"><ReactMarkdown>{selectedSubData.data.public_description}</ReactMarkdown></p>
+              <div className="sub-description-mobile">
+                <ReactMarkdown>{selectedSubData.data.public_description}</ReactMarkdown> 
+                {isLoggedIn ? <SubscribreBtn selectedSubData={selectedSubData}/> : null}
+                
+                </div>
             </div>
           </div>
       </header>
@@ -103,9 +121,11 @@ const headerTitle = selectedSubData.data.title;
       <main>
         
         <div className="info-section">
-        <InfoBox selectedSubData={selectedSubData} setSelectedSub={setSelectedSub}/>
-        <SubListBox  subRedditsList={favoriteSubs} setSelectedSub={setSelectedSub}
-          boxTitle={"Favorite Subreddits"}/>
+        <InfoBox selectedSubData={selectedSubData} setSelectedSub={setSelectedSub} removeSubFromReddit={removeSubFromReddit}
+        isLoggedIn={isLoggedIn}/>
+       
+        {isLoggedIn ? <SubListBox  subRedditsList={favoriteSubs} setSelectedSub={setSelectedSub}
+          boxTitle={"Favorite Subreddits"}/> : null}
         </div>
         <div className="post-section" >
         <OptionSelector selectedSubOption={selectedSubOption} setSelectedSubOption= {setSelectedSubOption} 

@@ -6,38 +6,37 @@ import { BiCommentDetail } from "react-icons/bi";
 import { BiUpvote} from "react-icons/bi"
 import { selectTheme } from "../../app/store";
 import { useSelector } from "react-redux";
-
+import { useCallback } from "react";
 function SearchResults_Post({ postSearchResults}) {
   
   const theme = useSelector(selectTheme)
-  // Users cached Icons
-  const [subredditIcons, setSubredditIcons] = useState({});
-  console.log(postSearchResults)
+
+  
   // check if url is an image
   function isImageUrl(url) {
     return /\.(jpeg|jpg|gif|png)$/i.test(url);
   }
-
-  // Get users icons and store in state
-  useEffect(() => {
-    console.log(postSearchResults)
-    async function getSubredditIcons() {
+  
+  const [subredditIcons, setSubredditIcons] = useState({});
+  
+  const getSubredditIcons = useCallback(async()=> {
       
-      const subredditNames = new Set(postSearchResults.map((post) => post.subreddit));
-      const subredditDataRequests = Array.from(subredditNames).map((subreddit) =>
-        fetch(`https://www.reddit.com/r/${subreddit}/about.json`).then((response) =>
-          response.json()
-        )
-      );
-      const subredditIcons = await Promise.all(subredditDataRequests);
-      const subredditIconMap = {};
-      subredditIcons.forEach((subreddit) => {
-        subredditIconMap[subreddit.data.display_name] = subreddit.data.icon_img;
-      });
-      setSubredditIcons(subredditIconMap);
-    }
+    const subredditNames = postSearchResults.map((post) => post.subreddit)
+    const subredditNamesIconPairs = {}
+    const subredditDataRequests = subredditNames.map(async(subreddit) =>{
+    const response = await fetch(`https://www.reddit.com/r/${subreddit}/about.json`)
+    const data = await response.json()
+    subredditNamesIconPairs[subreddit] = data.data.icon_img;
+       }
+    );
+    await Promise.all(subredditDataRequests);
+    setSubredditIcons(subredditNamesIconPairs)
+  },[postSearchResults])
+
+  useEffect(() => {
+    
     getSubredditIcons();
-  }, [postSearchResults]);
+  }, [postSearchResults,getSubredditIcons]);
 
   
   return (
