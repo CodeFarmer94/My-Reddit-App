@@ -5,7 +5,7 @@ import RedditLogo from "../../../images/RedditLogo2.png";
 import "./listOfSubPosts.css";
 import { selectTheme } from "../../../app/store";
 import { useSelector } from "react-redux";
-export default function ListOfSubsPosts({ selectedSubPosts }) {
+export default function ListOfSubsPosts({ selectedSubPosts,selectedSubData }) {
 
 
   const theme = useSelector(selectTheme)
@@ -31,9 +31,10 @@ export default function ListOfSubsPosts({ selectedSubPosts }) {
             ) : (
               <div className="thumbnail-container">
                 <img
-                  src={RedditLogo}
+                  src={selectedSubData.data.icon_img}
                   alt="thumbnail"
                   className="thumbnail-img"
+                  style={{borderRadius:"50%"}}
                 />
               </div>
             )}
