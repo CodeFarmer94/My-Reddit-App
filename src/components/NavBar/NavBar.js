@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import TrenkTalkLogo from "../../images/TrenkTalkLogo.png";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import { useDispatch } from "react-redux";
-import { toggleTheme } from "../../app/store";
+import { toggleTheme } from "../../store/store";
 export default function NavBar({
   setSearchTerm,
   userData,

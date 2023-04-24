@@ -11,7 +11,7 @@ import {
   setUserData,
   selectUserData,
   setUserFavSubs,
-} from "../../app/store.js";
+} from "../../store/store.js";
 
 // -------  Reddit Api Settings Param
 const REDDIT_CLIENT_ID = "E8YjmRNAhz4lJY9ARSsC5A";
@@ -33,24 +33,32 @@ export default function Reddit() {
 
   // Get Access token using the authorization Code
   async function getToken() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const tokenUrl = "https://www.reddit.com/api/v1/access_token";
-    const basicAuth = btoa(`${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`);
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${basicAuth}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `grant_type=authorization_code&code=${code}&redirect_uri=${REDDIT_REDIRECT_URI}`,
-    };
-    const response = await fetch(tokenUrl, options);
-    const data = await response.json();
-    sessionStorage.setItem("reddit_access_token", data.access_token);
-    setAccessToken(data.access_token);
-    window.history.replaceState({}, "", window.location.pathname);
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+      const tokenUrl = "https://www.reddit.com/api/v1/access_token";
+      const basicAuth = btoa(`${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`);
+      const options = {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${basicAuth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `grant_type=authorization_code&code=${code}&redirect_uri=${REDDIT_REDIRECT_URI}`,
+      };
+      const response = await fetch(tokenUrl, options);
+      if (response.ok) {
+        const data = await response.json();
+        sessionStorage.setItem("reddit_access_token", data.access_token);
+        setAccessToken(data.access_token);
+      }
+      window.history.replaceState({}, "", window.location.pathname);
+    } catch (error) {
+      console.error(error);
+      
+    }
   }
+  
  
   function authorize() {
     const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${REDDIT_CLIENT_ID}&response_type=code&state=state&redirect_uri=${encodeURIComponent(
@@ -60,7 +68,7 @@ export default function Reddit() {
     }
 
   useEffect(() => {
-    console.log("get Token effect run")
+    
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (code) {

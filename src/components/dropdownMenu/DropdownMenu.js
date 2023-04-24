@@ -1,5 +1,5 @@
 
-import { selectUserFavSubs } from "../../app/store";
+import { selectUserFavSubs } from "../../store/store";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import RedditLogo from "../../images/RedditLogo.png";
@@ -8,8 +8,8 @@ import { FaHeart } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
-import { toggleTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
+import { toggleTheme } from "../../store/store";
 import { useDispatch } from "react-redux";
 import "./dropdownMenu.css"
 

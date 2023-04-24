@@ -3,10 +3,10 @@ import {
     addFavSubToStore,
     selectUserFavSubs,
     removeFavSubFromStore,
-  } from "../../app/store";
+  } from "../../store/store";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 
 
 export default function SubscribreBtn({ selectedSubData}){

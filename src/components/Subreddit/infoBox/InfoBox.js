@@ -1,6 +1,6 @@
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-import { selectTheme } from "../../../app/store";
+import { selectTheme } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { getContrastColor } from "../../../functions/getContrastColor";
 import SubscribreBtn from "../../subscribeBtn/SubscribeBtn";

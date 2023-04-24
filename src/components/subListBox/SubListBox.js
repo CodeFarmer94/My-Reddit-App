@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { truncateText } from "../../functions/truncateText";
 import RedditLogo from "../../images/RedditLogo.png";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import { useSelector } from "react-redux";
 export default function SubListBox({ boxTitle, setSelectedSub,subRedditsList }) {
   

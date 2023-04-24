@@ -5,7 +5,7 @@ import { BiCommentDetail } from "react-icons/bi";
 import { BiUpvote, BiDownvote } from "react-icons/bi";
 import RedditLogo from "../../images/RedditLogo.png";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import { Link } from "react-router-dom";
 import { useCallback } from "react";
 import "./post.css";

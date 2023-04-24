@@ -3,7 +3,7 @@ import { RiFireFill } from "react-icons/ri";
 import { MdFiberNew } from "react-icons/md";
 import { FaBolt } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import "./optionSelector.css";
 
 export default function OptionSelector({
@@ -15,7 +15,7 @@ export default function OptionSelector({
    // Update the selected option
   const onClick = (option) => {
     setSelectedSubOption(option);
-    console.log(option);
+    
   };
   const theme = useSelector(selectTheme);
   return (

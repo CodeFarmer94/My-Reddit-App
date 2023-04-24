@@ -7,7 +7,7 @@ import { BiUpvote } from "react-icons/bi";
 import OptionSelector from "../optionSelector/OptionSelector";
 import SubListBox from "../subListBox/SubListBox";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 
 export default function Home({ setSelectedSub, accessToken }) {
   const [subredditIcons, setSubredditIcons] = useState({});

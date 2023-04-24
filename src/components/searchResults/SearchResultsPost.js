@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./searchResults.css"
 import { BiCommentDetail } from "react-icons/bi";
 import { BiUpvote} from "react-icons/bi"
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
 function SearchResults_Post({ postSearchResults}) {

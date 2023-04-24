@@ -4,11 +4,11 @@ import ListOfSubsPosts from "./listOfSubPosts/ListOfSubPosts";
 import OptionSelector from "../optionSelector/OptionSelector";
 import InfoBox from "./infoBox/InfoBox";
 import SubListBox from "../subListBox/SubListBox";
-import { selectUserFavSubs } from "../../app/store";
+import { selectUserFavSubs } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import SubscribreBtn from "../subscribeBtn/SubscribeBtn";
-import { removeFavSubFromStore } from "../../app/store";
+import { removeFavSubFromStore } from "../../store/store";
 import "./Subreddit.css";
 
 
@@ -54,20 +54,28 @@ const favoriteSubs = useSelector(selectUserFavSubs);
   }, [subredditName,selectedSubOption]);
 
   async function removeSubFromReddit(subreddit) {
-    await fetch(
-     `https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`,
-     {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${localStorage.getItem(
-           "reddit_access_token"
-         )}`,
-         "Content-Type": "application/json",
-       },
-     }
-   );
-   console.log(subreddit);
-   dispatch(removeFavSubFromStore(selectedSubData));
+    try{
+      const response = await fetch(
+        `https://oauth.reddit.com/api/subscribe?action=unsub&sr_name=${subreddit}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(
+              "reddit_access_token"
+            )}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if(response.ok){
+      console.log(subreddit);
+      dispatch(removeFavSubFromStore(selectedSubData));
+      }
+      throw new Error("Can't fetch Data")
+    }
+      catch(error){
+        console.log(error)
+      }
  }
 
  

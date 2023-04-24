@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { truncateText } from "../../functions/truncateText";
 import "./searchResults.css"
 import RedditLogo from "../../images/RedditLogo.png";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 import { useSelector } from "react-redux";
 export default function SearchResults_Subreddits({subredditSearchResults }) {
 

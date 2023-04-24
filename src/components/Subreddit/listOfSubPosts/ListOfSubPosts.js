@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { BiCommentDetail } from "react-icons/bi";
-import RedditLogo from "../../../images/RedditLogo2.png";
 import "./listOfSubPosts.css";
-import { selectTheme } from "../../../app/store";
+import { selectTheme } from "../../../store/store";
 import { useSelector } from "react-redux";
 export default function ListOfSubsPosts({ selectedSubPosts,selectedSubData }) {
 

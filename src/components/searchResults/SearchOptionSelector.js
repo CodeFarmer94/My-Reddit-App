@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectTheme } from "../../app/store";
+import { selectTheme } from "../../store/store";
 export default function SearchOptionSelector({ selectedSearchOption, setSelectedSearchOption}) {
   
   // Get option value from URL
