@@ -17,6 +17,7 @@ export default function Post() {
   const [avatars, setAvatars] = useState({});
   const [postSubredditData, setPostSubredditData] = useState();
   const [replyAvatars, setReplyAvatars] = useState({});
+  const [error, setError] = useState(null)
   const theme = useSelector(selectTheme);
   // retreive id from url bar
   const pathname = window.location.pathname;
@@ -36,22 +37,31 @@ export default function Post() {
 
   // Get Data about the current post's subreddit
   useEffect(() => {
-    console.log("get post data effect run")
+    
     async function getSubredditData() {
       const response = await fetch(
         `https://www.reddit.com/r/${subreddit}/about.json?flair_enabled=true`
       );
       const data = await response.json();
+      if(data.error){
+        setError(data.error)
+        return
+      }
       setPostSubredditData(data);
     }
+
     async function getPostData() {
       const response = await fetch(
         `https://www.reddit.com/r/${subreddit}/comments/${id}.json`
       );
       const data = await response.json();
-      console.log(data[0].data.children[0].data)
+      if(data.error){
+        setError(data.error)
+        return
+      }
       setPost(data[0].data.children[0].data);
       setComments(data[1].data.children);
+
     }
     getPostData();
     getSubredditData();
@@ -59,15 +69,24 @@ export default function Post() {
 
   // Get Avatar of eacth user that has commented
   const getUserAvatar = useCallback(async (user) => {
-    const response = await fetch(
+    try{
+         const response = await fetch(
       `https://www.reddit.com/user/${user}/about.json`
     );
     const data = await response.json();
+    if(data){
     const avatarUrl = data.data.snoovatar_img;
     setAvatars((avatars) => ({
       ...avatars,
       [user]: avatarUrl,
     }));
+    }
+    } catch(error){
+      throw new Error('getUserAvatar Failed')
+    }
+ 
+    
+   
   }, [setAvatars]);
 
   
@@ -75,7 +94,6 @@ export default function Post() {
     if (comments) {
       comments.forEach((comment) => {
         const user = comment.data.author;
-   
           getUserAvatar(user);
         }
       )
@@ -114,8 +132,8 @@ export default function Post() {
           ? "bg2-dark-color post-page-container"
           : "bg2-light-color post-page-container"
       }
-    >
-      {post && (
+    > 
+      { !error ? post && (
         <div>
           <div className="post-container">
             <div className="post-column-flex">
@@ -172,15 +190,18 @@ export default function Post() {
             </div>
           </div>
         </div>
-      )}
+      ) :  /*DISPLAY WARNING INSTEAD */
+      <h1 style={{margin:'auto', padding:'5rem', color:theme === 'dark' ? 'yellow' : 'black', border:'2px solid white',}}>API calls limit exceeded: Since July 2023 Reddit is limiting third party apps API calls 
+          Sorry for the inconvinience.</h1>}
+
       {comments && (
         <div className="comments-container">
-          {comments.map(function (comment) {
+          {comments.map(function (comment,index) {
             const user = comment.data.author;
             const avatarUrl = avatars[user];
 
             return (
-              <div key={comment.data.id} className="comment-container">
+              <div key={index} className="comment-container">
                 <div className="comment-flex-row">
                   {
                     <img

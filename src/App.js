@@ -4,9 +4,9 @@ import "./styles/styles.css"
 import { BrowserRouter as Router } from 'react-router-dom';
 import Reddit from './components/reddit/Reddit';
 import { useSelector } from 'react-redux';
-import { selectTheme } from './app/store';
+import { selectTheme } from './store/store';
 import { useEffect } from 'react';
-import { toggleTheme } from './app/store';
+import { toggleTheme } from './store/store';
 import { useDispatch } from 'react-redux';
 
 function App() {

@@ -94,14 +94,14 @@ export default function DropdownMenu({ setSearchTerm,isDropdownVisible,setIsDrop
             </div>
             <section className="nav-section flex-row">
         <p>{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
-        <div class="toggle-slide">
+        <div className="toggle-slide">
           <input
             type="checkbox"
             id="toggle"
-            checked={theme === "dark" ? true : false}
+            defaultChecked={theme === "dark" ? true : false}
             onClick={setTheme}
           />
-          <label for="toggle" class="toggle-icon"></label>
+          <label hmtlfor="toggle" className="toggle-icon"></label>
         </div>
       </section>
             <p onClick={handleFavSubDropdown} className="text-left flex-row"><FaHeart/>Favorite Subs

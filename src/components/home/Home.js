@@ -9,27 +9,34 @@ import SubListBox from "../subListBox/SubListBox";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../store/store";
 
-export default function Home({ setSelectedSub, accessToken }) {
+export default function Home({ setSelectedSub }) {
   const [subredditIcons, setSubredditIcons] = useState({});
   const [posts, setPosts] = useState([]);
   const [trendingSubreddits, setTrendingSubreddits] = useState(null);
   const [homeOption, setHomeOption] = useState("best");
+  const [error, setError] = useState(null)
   const theme = useSelector(selectTheme);
+  
    // Function to check if a URL is an image
    function isImageUrl(url) {
     return /\.(jpeg|jpg|gif|png)$/i.test(url);
   }
 
+
   useEffect(() => {
-    // Fetch trending subreddits and set state
-    
+  
     async function getTrendingSubreddits() {
-      const response = await fetch(
-        "https://www.reddit.com/subreddits/popular.json"
-      );
-      const data = await response.json();
-      console.log(data.data.children);
-      setTrendingSubreddits(data.data.children);
+      try {
+        const response = await fetch("https://www.reddit.com/subreddits/popular.json",);
+        const data = await response.json();
+        if(data.error){
+          setError(data.error)
+          return
+        }
+        setTrendingSubreddits(data.data.children);
+      } catch (error) {
+        throw new Error('Error fetching subreddits')
+      }
     }
       getTrendingSubreddits();
   }, []);
@@ -41,7 +48,10 @@ export default function Home({ setSelectedSub, accessToken }) {
         `https://www.reddit.com/r/popular/${homeOption}.json`
       );
       const data = await response.json();
-      console.log(data.data.children);
+      if(data.error){
+        setError(data.error)
+        return
+      }
       setPosts(data.data.children);
     }
     getPopularPosts();
@@ -81,8 +91,8 @@ export default function Home({ setSelectedSub, accessToken }) {
           setSelectedSubOption={setHomeOption}
           optionsObject={{ option1: "best", option2: "new", option3: "top" }}
         />
-
-        {posts.map((post) => (
+         {/*Do not display content if error occured*/}
+        {!error ? posts.map((post) => (
           <Link
             key={post.data.id}
             to={`/${post.data.subreddit}/post/${post.data.id}`}
@@ -162,7 +172,11 @@ export default function Home({ setSelectedSub, accessToken }) {
               )}
             </div>
           </Link>
-        ))}
+        )) 
+        :
+        /*DISPLAY WARNING INSTEAD */
+        <h1 style={{margin:'auto', padding:'5rem', color:theme === 'dark' ? 'yellow' : 'black', border:'2px solid white',}}>API calls limit exceeded: Since July 2023 Reddit is limiting third party apps API calls 
+            Sorry for the inconvinience.</h1>}
       </div>
     </main>
   );

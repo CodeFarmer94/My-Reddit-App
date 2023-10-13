@@ -80,7 +80,6 @@ export default function Reddit() {
   // Get UserData
   useEffect(() => {
     async function getUserData() {
-      console.log("get user data fetch run")
       const options = {
         method: "GET",
         headers: {
@@ -106,7 +105,7 @@ export default function Reddit() {
   // Get user subscribded subreddits
   useEffect(() => {
     async function getUserFavSubs() {
-      console.log("user fav sub fetch run")
+      
       const options = {
         method: "GET",
         headers: {
@@ -132,12 +131,9 @@ export default function Reddit() {
   // Get list of subreddit per search
 
   useEffect(()=>{
-      console.log("set isLogged in run")
-      console.log((sessionStorage.getItem("reddit_access_token")))
       if(sessionStorage.getItem("reddit_access_token")){
         setIsLoggedIn(true)
       }
-      console.log(isLoggedIn)
   },[isLoggedIn,accessToken])
 
   return (

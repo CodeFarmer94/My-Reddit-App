@@ -70,14 +70,14 @@ export default function NavBar({
       </section>
       <section className="nav-section flex-row no-mobile">
         <p>{theme === "dark" ? "Dark Mode" : "Light Mode"}</p>
-        <div class="toggle-slide">
+        <div className="toggle-slide">
           <input
             type="checkbox"
             id="toggle"
-            checked={theme === "dark" ? true : false}
+            defaultChecked={theme === "dark" ? true : false}
             onClick={setTheme}
           />
-          <label for="toggle" class="toggle-icon"></label>
+          <label htmlFor="toggle" className="toggle-icon"></label>
         </div>
       </section>
       <section className={isLoggedIn ? "nav-section" : "nav-section display-none"}>
